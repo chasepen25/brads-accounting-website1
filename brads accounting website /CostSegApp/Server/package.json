@@ -1,0 +1,12 @@
+{
+  "name": "costseg-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cost segregation study server — zero runtime dependencies",
+  "main": "server.js",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node server.js",
+    "backup": "node backup.js"
+  }
+}
