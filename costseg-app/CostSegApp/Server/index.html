@@ -245,6 +245,14 @@
     .src-tag { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #eef2f7; color: #4b5563; white-space: nowrap; }
     .src-tag.actual { background: #fef3c7; color: #92400e; }
     .group-row td { background: #f8fafc; font-weight: 700; color: #0f2a4a; }
+    table.tree td { border-bottom: 1px solid #f0f2f5; }
+    table.tree tr.lvl-basis td { background: #0f2a4a; color: #fff; font-weight: 700; font-size: 14px; padding: 9px 10px; }
+    table.tree tr.lvl-basis td .muted { color: #b9c7d8; font-weight: 400; font-size: 12px; }
+    table.tree tr.lvl-life td { background: #eef2f7; font-weight: 700; color: #0f2a4a; }
+    table.tree tr.lvl-life td:first-child { padding-left: 24px; }
+    table.tree tr.lvl-cat td:first-child { padding-left: 44px; color: #374151; }
+    table.tree tr.lvl-cat td { color: #4b5563; }
+    table.tree tr.grand td { font-weight: 700; font-size: 14px; border-top: 2px solid #0f2a4a; border-bottom: 0; padding-top: 10px; }
     .note { font-size: 12px; color: #6b7280; margin-top: 16px; line-height: 1.5; }
   </style>
 </head>
@@ -405,11 +413,7 @@
       </div>
     </div>
 
-    <div class="tallies">
-      <div class="section"><h3>By basis</h3><div id="tallyBasis"></div></div>
-      <div class="section"><h3>By life</h3><div id="tallyLife"></div></div>
-    </div>
-    <div class="section"><h3>By category</h3><div id="tallyCategory"></div></div>
+    <div class="section"><h3>Totals by basis, life, and category</h3><div id="tallyTree"></div></div>
     <div class="section"><h3>Line items</h3><div id="toItems"></div></div>
   </template>
 
@@ -1324,33 +1328,30 @@
       const sum = list => list.reduce((s, t) => s + t.total, 0);
       const grand = sum(takeoffs);
 
-      // By basis
       const basisIds = [...new Set([...bases.map(b => b.id), ...takeoffs.map(t => t.basisId)])].filter(id => takeoffs.some(t => t.basisId === id));
-      $("tallyBasis").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Basis</th>${lives.map(l => `<th class="n">${l}-yr</th>`).join("")}<th class="n">Total</th><th class="n">% of basis</th></tr></thead><tbody>
+
+      // One nested summary: each basis, split by life, each life split by category
+      const pct = (v, of) => of ? (v / of * 100).toFixed(1) + "%" : "—";
+      $("tallyTree").innerHTML = takeoffs.length ? `<table class="t tree">
+        <thead><tr><th>Basis / life / category</th><th class="n">Items</th><th class="n">Total</th><th class="n">% of basis</th></tr></thead><tbody>
         ${basisIds.map(id => {
           const items = takeoffs.filter(t => t.basisId === id);
           const b = bases.find(x => x.id === id);
           const dep = b ? (b.kind === KINDS[0] ? depreciable(b) : num(b.amount)) : null;
-          const tot = sum(items);
-          return `<tr><td>${esc(basisName(id))}</td>${lives.map(l => `<td class="n">${money(sum(items.filter(t => t.life === l)) || null)}</td>`).join("")}
-                  <td class="n"><b>${money(tot)}</b></td><td class="n">${dep ? (tot / dep * 100).toFixed(1) + "%" : "—"}</td></tr>`;
+          const bTot = sum(items);
+          return `<tr class="lvl-basis"><td>${esc(basisName(id))} ${dep ? `<span class="muted">· depreciable basis ${money(dep)}</span>` : ""}</td>
+                    <td class="n">${items.length}</td><td class="n">${money(bTot)}</td><td class="n">${pct(bTot, dep)}</td></tr>` +
+            lives.filter(l => items.some(t => t.life === l)).map(l => {
+              const li = items.filter(t => t.life === l), lTot = sum(li);
+              const cats = [...new Set(li.map(t => t.category))].sort((a, b) => sum(li.filter(t => t.category === b)) - sum(li.filter(t => t.category === a)));
+              return `<tr class="lvl-life"><td>${l}-year</td><td class="n">${li.length}</td><td class="n">${money(lTot)}</td><td class="n">${pct(lTot, dep)}</td></tr>` +
+                cats.map(c => { const ci = li.filter(t => t.category === c), cTot = sum(ci);
+                  return `<tr class="lvl-cat"><td>${esc(c)}</td><td class="n">${ci.length}</td><td class="n">${money(cTot)}</td><td class="n">${pct(cTot, dep)}</td></tr>`; }).join("");
+            }).join("");
         }).join("")}
-        <tr class="total"><td>Total</td>${lives.map(l => `<td class="n">${money(sum(takeoffs.filter(t => t.life === l)) || null)}</td>`).join("")}<td class="n">${money(grand)}</td><td></td></tr>
-        </tbody></table>` : `<div class="none" style="color:#9ca3af;font-size:13px">Totals show here once items are added.</div>`;
-
-      // By life
-      $("tallyLife").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Life</th><th class="n">Items</th><th class="n">Total</th><th class="n">Share</th></tr></thead><tbody>
-        ${lives.map(l => { const it = takeoffs.filter(t => t.life === l); const v = sum(it);
-          return `<tr><td>${l}-year</td><td class="n">${it.length}</td><td class="n">${money(v || null)}</td><td class="n">${grand ? (v / grand * 100).toFixed(1) + "%" : "—"}</td></tr>`; }).join("")}
-        <tr class="total"><td>Total</td><td class="n">${takeoffs.length}</td><td class="n">${money(grand)}</td><td></td></tr></tbody></table>` : "";
-
-      // By category
-      const cats = [...new Set(takeoffs.map(t => t.category))].sort((a, b) => sum(takeoffs.filter(t => t.category === b)) - sum(takeoffs.filter(t => t.category === a)));
-      $("tallyCategory").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Category</th><th class="n">Items</th>${lives.map(l => `<th class="n">${l}-yr</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>
-        ${cats.map(c => { const it = takeoffs.filter(t => t.category === c);
-          return `<tr><td>${esc(c)}</td><td class="n">${it.length}</td>${lives.map(l => `<td class="n">${money(sum(it.filter(t => t.life === l)) || null)}</td>`).join("")}<td class="n"><b>${money(sum(it))}</b></td></tr>`; }).join("")}
-        <tr class="total"><td>Total</td><td class="n">${takeoffs.length}</td>${lives.map(l => `<td class="n">${money(sum(takeoffs.filter(t => t.life === l)) || null)}</td>`).join("")}<td class="n">${money(grand)}</td></tr></tbody></table>`
-        : `<div style="color:#9ca3af;font-size:13px">Nothing added yet.</div>`;
+        <tr class="grand"><td>All bases${lives.map(l => { const v = sum(takeoffs.filter(t => t.life === l)); return v ? ` · ${l}-yr ${money(v)}` : ""; }).join("")}</td>
+          <td class="n">${takeoffs.length}</td><td class="n">${money(grand)}</td><td></td></tr>
+        </tbody></table>` : `<div style="color:#9ca3af;font-size:13px">Totals show here once items are added.</div>`;
 
       // Line items, grouped by basis
       $("toItems").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Item</th><th>Source</th><th>Category</th><th>Life</th><th class="n">Qty</th><th class="n">Unit cost</th><th class="n">Total</th><th></th></tr></thead><tbody>
