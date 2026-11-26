@@ -25,7 +25,7 @@
     }
     nav button:hover { color: #0f2a4a; background: #f4f6f9; }
     nav button.active { color: #0f2a4a; font-weight: 600; border-bottom-color: #2f80ed; }
-    main { padding: 28px; max-width: 1100px; }
+    main { padding: 28px; max-width: 1180px; }
     .panel { display: none; }
     .panel.active { display: block; }
     .panel h2 { margin: 0 0 6px; font-size: 20px; }
@@ -41,6 +41,7 @@
       border-radius: 8px; padding: 20px 22px;
     }
     .section h3 { margin: 0 0 14px; font-size: 15px; color: #0f2a4a; }
+    .section .hint { margin: -8px 0 14px; font-size: 12px; color: #6b7280; }
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 18px; }
     .field { display: flex; flex-direction: column; gap: 5px; }
     .field.wide { grid-column: 1 / -1; }
@@ -53,10 +54,109 @@
     .field input:focus, .field select:focus, .field textarea:focus {
       outline: none; border-color: #2f80ed; box-shadow: 0 0 0 3px #2f80ed22;
     }
+    .field .auto { border-left-width: 5px; }
     .field label.check { display: flex; align-items: center; gap: 8px; font-weight: 500; color: #1f2937; font-size: 14px; margin-top: 4px; cursor: pointer; }
     .field label.check input { width: 16px; height: 16px; margin: 0; }
     .hidden { display: none !important; }
     @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+    /* Workpapers */
+    .dropzone {
+      display: block; margin-top: 20px; border: 2px dashed #9fb3cc; border-radius: 10px;
+      background: #fff; padding: 30px; text-align: center; color: #4b5563; cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .dropzone:hover, .dropzone.over { background: #eef5ff; border-color: #2f80ed; }
+    .dropzone b { color: #0f2a4a; }
+    .dropzone small { display: block; margin-top: 6px; color: #6b7280; }
+
+    .docs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .doc-pill {
+      border: 1px solid #c9d0da; background: #fff; border-radius: 999px;
+      padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; color: #1f2937;
+    }
+    .doc-pill.active { background: #0f2a4a; color: #fff; border-color: #0f2a4a; }
+    .doc-pill span { opacity: .7; margin-left: 6px; }
+
+    .palette {
+      position: sticky; top: 0; z-index: 20;
+      margin-top: 14px; background: #fff; border: 1px solid #d9dee5; border-radius: 10px;
+      padding: 12px 14px; box-shadow: 0 4px 14px #0f2a4a10;
+    }
+    .palette .tip { font-size: 12px; color: #6b7280; margin-bottom: 9px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip {
+      --c: #888;
+      border: 1.5px solid color-mix(in srgb, var(--c) 45%, white);
+      background: color-mix(in srgb, var(--c) 12%, white);
+      color: color-mix(in srgb, var(--c) 70%, #555);
+      border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px; opacity: .8;
+      transition: all .12s;
+    }
+    .chip:hover { opacity: 1; }
+    .chip.active {
+      background: var(--c); color: #fff; border-color: var(--c); opacity: 1;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 30%, white);
+    }
+    .chip .count {
+      background: #fff; color: var(--c); border-radius: 999px; font-size: 11px;
+      padding: 1px 6px; border: 1px solid var(--c);
+    }
+    .chip:not(.found) .count { display: none; }
+
+    .pages { margin-top: 16px; }
+    .page-row { display: flex; gap: 16px; margin-bottom: 22px; align-items: flex-start; }
+    .page-side {
+      width: 230px; flex-shrink: 0; background: #fff; border: 1px solid #d9dee5;
+      border-radius: 8px; padding: 12px; position: sticky; top: 110px; font-size: 13px;
+    }
+    .page-side h4 { margin: 0 0 8px; font-size: 13px; color: #0f2a4a; }
+    .page-side .none { color: #9ca3af; font-size: 12px; }
+    .finding {
+      border-left: 4px solid var(--c); background: color-mix(in srgb, var(--c) 9%, white);
+      border-radius: 4px; padding: 6px 26px 6px 8px; margin-bottom: 6px; position: relative;
+    }
+    .finding .name { color: var(--c); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; }
+    .finding .val { color: #1f2937; word-break: break-word; }
+    .finding button {
+      position: absolute; top: 4px; right: 4px; border: 0; background: none;
+      color: #9ca3af; cursor: pointer; font-size: 15px; line-height: 1;
+    }
+    .finding button:hover { color: #dc2626; }
+
+    .page-wrap { position: relative; background: #fff; box-shadow: 0 1px 6px #0002; flex-shrink: 0; }
+    .page-wrap canvas { display: block; }
+    .page-layer { position: absolute; inset: 0; }
+    .page-layer.drawing { cursor: crosshair; }
+    .page-num { position: absolute; top: -18px; left: 0; font-size: 11px; color: #6b7280; }
+    .hl {
+      position: absolute; border: 2px solid var(--c);
+      background: color-mix(in srgb, var(--c) 30%, transparent);
+      mix-blend-mode: multiply; border-radius: 2px;
+    }
+    .hl.draft { border-style: dashed; }
+
+    .popup {
+      position: absolute; z-index: 30; width: 270px; background: #fff;
+      border: 2px solid var(--c); border-radius: 8px; padding: 10px;
+      box-shadow: 0 8px 24px #0003;
+    }
+    .popup label { display: block; font-size: 12px; font-weight: 700; color: var(--c); margin-bottom: 6px; }
+    .popup input, .popup textarea {
+      width: 100%; font: inherit; font-size: 14px; border: 1px solid #c9d0da;
+      border-radius: 6px; padding: 7px 9px;
+    }
+    .popup textarea { min-height: 60px; resize: vertical; }
+    .popup .btns { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+    .popup button { font: inherit; font-size: 13px; border-radius: 6px; padding: 6px 12px; cursor: pointer; border: 1px solid #c9d0da; background: #fff; }
+    .popup button.save { background: var(--c); color: #fff; border-color: var(--c); }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #0f2a4a; color: #fff; padding: 10px 16px; border-radius: 8px;
+      font-size: 14px; z-index: 100; box-shadow: 0 6px 20px #0003;
+    }
   </style>
 </head>
 <body>
@@ -67,6 +167,25 @@
   <nav id="tabs"></nav>
   <main id="panels"></main>
 
+  <!-- ===================== WORKPAPERS ===================== -->
+  <template id="workpapers-panel">
+    <label class="dropzone" id="dropzone">
+      <input type="file" id="fileInput" accept="application/pdf" multiple hidden>
+      <b>Drag and drop PDFs here</b> or click to browse
+      <small>Closing statements, appraisals, tax records, and other audit support</small>
+    </label>
+
+    <div class="docs" id="docList"></div>
+
+    <div class="palette hidden" id="palette">
+      <div class="tip">Click an item, then drag a box over where it appears on the page. Press Esc to cancel.</div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="pages" id="pages"></div>
+  </template>
+
+  <!-- ===================== OVERVIEW ===================== -->
   <template id="overview-form">
     <div class="section">
       <h3>Study</h3>
@@ -118,6 +237,20 @@
     </div>
 
     <div class="section">
+      <h3>From workpapers</h3>
+      <div class="hint">Fills in automatically when you highlight these on the Workpapers tab. You can still edit them.</div>
+      <div class="grid">
+        <div class="field"><label for="parcelNumber">Parcel number</label><input id="parcelNumber"></div>
+        <div class="field"><label for="purchasePrice">Purchase price</label><input id="purchasePrice"></div>
+        <div class="field"><label for="landValue">Land value</label><input id="landValue"></div>
+        <div class="field"><label for="acquisitionDate">Acquisition date</label><input id="acquisitionDate"></div>
+        <div class="field"><label for="inServiceDate">In-service date</label><input id="inServiceDate"></div>
+        <div class="field"><label for="priorDepr">Prior depreciation taken</label><input id="priorDepr"></div>
+        <div class="field wide"><label for="workpaperNotes">Notes</label><textarea id="workpaperNotes"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
       <h3>Site visit</h3>
       <div class="grid">
         <div class="field"><label for="siteVisitType">Site visit type</label><input id="siteVisitType"></div>
@@ -127,9 +260,10 @@
     </div>
   </template>
 
+  <script src="vendor/pdf.min.js"></script>
   <script>
     const tabs = [
-      ["Workpapers", "Source documents and supporting files."],
+      ["Workpapers", "Upload the documents that support the study's values in an audit, and highlight where each value appears."],
       ["Overview", "Property summary and study details."],
       ["Bases", "Purchase price, land allocation, and depreciable basis."],
       ["Takeoffs", "Quantity takeoffs by building component."],
@@ -142,7 +276,43 @@
       ["Review & Deliver", "Final checks and client deliverables."]
     ];
 
-    // Asset class choices for each property type
+    // ---------- Tabs ----------
+    const nav = document.getElementById("tabs");
+    const main = document.getElementById("panels");
+    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form" };
+
+    tabs.forEach(([name, desc], i) => {
+      const btn = document.createElement("button");
+      btn.textContent = name;
+      btn.onclick = () => show(i);
+      nav.appendChild(btn);
+
+      const panel = document.createElement("section");
+      panel.className = "panel";
+      panel.innerHTML = `<h2>${name}</h2><p>${desc}</p>`;
+      if (templates[name]) {
+        panel.appendChild(document.getElementById(templates[name]).content.cloneNode(true));
+      } else {
+        panel.insertAdjacentHTML("beforeend", `<div class="card">${name} content goes here</div>`);
+      }
+      main.appendChild(panel);
+    });
+
+    function show(i) {
+      nav.querySelectorAll("button").forEach((b, j) => b.classList.toggle("active", i === j));
+      main.querySelectorAll(".panel").forEach((p, j) => p.classList.toggle("active", i === j));
+    }
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    function toast(msg) {
+      const t = document.createElement("div");
+      t.className = "toast"; t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2200);
+    }
+
+    // ---------- Overview: property type, asset class, building life ----------
     const ASSET_CLASSES = {
       "Residential": ["Single Family", "Condo Rental", "Multi-plex Rental", "Townhome", "Cabin"],
       "Multifamily": ["Garden Apartments", "Walk-up Apartments", "Apartment Complex", "Apartment High-rise",
@@ -156,36 +326,10 @@
       "Hospitality": ["Hotel", "Hotel (Full Service)", "Motel"]
     };
 
-    const nav = document.getElementById("tabs");
-    const main = document.getElementById("panels");
-
-    tabs.forEach(([name, desc], i) => {
-      const btn = document.createElement("button");
-      btn.textContent = name;
-      btn.onclick = () => show(i);
-      nav.appendChild(btn);
-
-      const panel = document.createElement("section");
-      panel.className = "panel";
-      panel.innerHTML = `<h2>${name}</h2><p>${desc}</p>`;
-      if (name === "Overview") {
-        panel.appendChild(document.getElementById("overview-form").content.cloneNode(true));
-      } else {
-        panel.insertAdjacentHTML("beforeend", `<div class="card">${name} content goes here</div>`);
-      }
-      main.appendChild(panel);
-    });
-
-    function show(i) {
-      nav.querySelectorAll("button").forEach((b, j) => b.classList.toggle("active", i === j));
-      main.querySelectorAll(".panel").forEach((p, j) => p.classList.toggle("active", i === j));
-    }
-
-    // Property type -> asset class dropdown
-    const propertyType = document.getElementById("propertyType");
-    const customPropertyType = document.getElementById("customPropertyType");
-    const assetClass = document.getElementById("assetClass");
-    const customAssetClass = document.getElementById("customAssetClass");
+    const propertyType = $("propertyType");
+    const customPropertyType = $("customPropertyType");
+    const assetClass = $("assetClass");
+    const customAssetClass = $("customAssetClass");
 
     propertyType.addEventListener("change", () => {
       const type = propertyType.value;
@@ -194,7 +338,7 @@
       if (isCustom) customPropertyType.focus();
 
       const options = ASSET_CLASSES[type] || [];
-      // Custom types, and types without a list yet, get a free-text asset class
+      // Custom types get a free-text asset class
       const freeText = type !== "" && options.length === 0;
       assetClass.classList.toggle("hidden", freeText);
       customAssetClass.classList.toggle("hidden", !freeText);
@@ -202,8 +346,8 @@
 
       // Short-term rental checkbox only for Residential
       const isResidential = type === "Residential";
-      document.getElementById("strRow").classList.toggle("hidden", !isResidential);
-      if (!isResidential) document.getElementById("shortTermRental").checked = false;
+      $("strRow").classList.toggle("hidden", !isResidential);
+      if (!isResidential) $("shortTermRental").checked = false;
 
       setBuildingLife();
 
@@ -216,13 +360,330 @@
     // A short-term rental is treated as nonresidential, so it gets 39.
     function setBuildingLife() {
       const type = propertyType.value;
-      const str = document.getElementById("shortTermRental").checked;
+      const str = $("shortTermRental").checked;
       const life = type === "" ? "" : ((type === "Residential" || type === "Multifamily") && !str ? "27.5" : "39");
-      document.getElementById("buildingLife").value = life;
+      $("buildingLife").value = life;
     }
-    document.getElementById("shortTermRental").addEventListener("change", setBuildingLife);
+    $("shortTermRental").addEventListener("change", setBuildingLife);
 
-    show(tabs.findIndex(t => t[0] === "Overview"));
+    // ---------- Workpapers ----------
+    // Each item: key, label, color, the Overview field it fills
+    const ITEMS = [
+      { key: "owner",     label: "Owner Name",       color: "#2563eb", target: "taxpayerEntity" },
+      { key: "address",   label: "Address",          color: "#16a34a", target: "address" },
+      { key: "parcel",    label: "Parcel Number",    color: "#9333ea", target: "parcelNumber" },
+      { key: "sqft",      label: "Total Sq Ft",      color: "#ea580c", target: "totalSqft" },
+      { key: "lot",       label: "Lot Size",         color: "#0d9488", target: "lotSize" },
+      { key: "yearBuilt", label: "Year Built",       color: "#db2777", target: "yearBuilt" },
+      { key: "price",     label: "Purchase Price",   color: "#dc2626", target: "purchasePrice" },
+      { key: "land",      label: "Land Value",       color: "#65a30d", target: "landValue" },
+      { key: "inService", label: "In-Service Date",  color: "#0891b2", target: "inServiceDate" },
+      { key: "acq",       label: "Acquisition Date", color: "#ca8a04", target: "acquisitionDate" },
+      { key: "priorDepr", label: "Prior Depr Taken", color: "#92400e", target: "priorDepr" },
+      { key: "note",      label: "Note",             color: "#64748b", target: "workpaperNotes", multi: true }
+    ];
+    const itemByKey = Object.fromEntries(ITEMS.map(it => [it.key, it]));
+
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = window.PDF_WORKER_URL || "vendor/pdf.worker.min.js";
+    }
+
+    const docs = [];        // { id, name, pdf, numPages }
+    let findings = [];      // { id, docId, page, key, value, rect: {x,y,w,h} as fractions of the page }
+    let currentDoc = null;
+    let activeKey = null;
+    let openPopup = null;
+    let nextId = 1;
+    const lastAuto = {};    // what we last auto-filled into each Overview field
+
+    // Item chips
+    const chips = $("chips");
+    chips.innerHTML = ITEMS.map(it =>
+      `<button class="chip" data-key="${it.key}" style="--c:${it.color}">${it.label}<span class="count"></span></button>`
+    ).join("");
+    chips.addEventListener("click", e => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      setActive(activeKey === chip.dataset.key ? null : chip.dataset.key);
+    });
+
+    function setActive(key) {
+      activeKey = key;
+      chips.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.key === key));
+      document.querySelectorAll(".page-layer").forEach(l => l.classList.toggle("drawing", !!key));
+    }
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") { closePopup(); setActive(null); }
+    });
+
+    // Upload: drag and drop or browse
+    const dropzone = $("dropzone");
+    const fileInput = $("fileInput");
+    fileInput.addEventListener("change", () => { addFiles(fileInput.files); fileInput.value = ""; });
+    ["dragenter", "dragover"].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add("over"); }));
+    ["dragleave", "drop"].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove("over"); }));
+    dropzone.addEventListener("drop", e => addFiles(e.dataTransfer.files));
+    // Don't let a missed drop open the PDF in the browser tab
+    window.addEventListener("dragover", e => e.preventDefault());
+    window.addEventListener("drop", e => e.preventDefault());
+
+    async function addFiles(fileList) {
+      if (!window.pdfjsLib) { toast("PDF viewer didn't load. Refresh and try again."); return; }
+      const pdfs = [...fileList].filter(f => f.type === "application/pdf" || /\.pdf$/i.test(f.name));
+      if (!pdfs.length) { toast("Only PDF files can be uploaded."); return; }
+      for (const file of pdfs) {
+        try {
+          const data = new Uint8Array(await file.arrayBuffer());
+          const pdf = await pdfjsLib.getDocument({ data }).promise;
+          const doc = { id: nextId++, name: file.name, pdf, numPages: pdf.numPages };
+          docs.push(doc);
+          currentDoc = doc;
+        } catch (err) {
+          console.error(err);
+          toast(`Couldn't open ${file.name}.`);
+        }
+      }
+      renderDocList();
+      renderPages();
+    }
+
+    function renderDocList() {
+      $("palette").classList.toggle("hidden", docs.length === 0);
+      $("docList").innerHTML = docs.map(d => {
+        const n = findings.filter(f => f.docId === d.id).length;
+        return `<button class="doc-pill ${d === currentDoc ? "active" : ""}" data-id="${d.id}">📄 ${esc(d.name)}<span>${d.numPages} pg${n ? ` · ${n} found` : ""}</span></button>`;
+      }).join("");
+      $("docList").querySelectorAll(".doc-pill").forEach(b => b.onclick = () => {
+        currentDoc = docs.find(d => d.id === +b.dataset.id);
+        renderDocList();
+        renderPages();
+      });
+    }
+
+    let renderToken = 0;
+    async function renderPages() {
+      closePopup();
+      const token = ++renderToken;
+      const pages = $("pages");
+      pages.innerHTML = "";
+      if (!currentDoc) return;
+
+      const width = Math.min(860, Math.max(420, pages.clientWidth - 250));
+      for (let n = 1; n <= currentDoc.numPages; n++) {
+        const page = await currentDoc.pdf.getPage(n);
+        if (token !== renderToken) return;   // user switched documents
+        const base = page.getViewport({ scale: 1 });
+        const viewport = page.getViewport({ scale: width / base.width });
+        const ratio = window.devicePixelRatio || 1;
+
+        const row = document.createElement("div");
+        row.className = "page-row";
+        row.innerHTML = `
+          <aside class="page-side" data-page="${n}"></aside>
+          <div class="page-wrap" style="width:${viewport.width}px;height:${viewport.height}px">
+            <div class="page-num">Page ${n} of ${currentDoc.numPages}</div>
+            <canvas></canvas>
+            <div class="page-layer ${activeKey ? "drawing" : ""}" data-page="${n}"></div>
+          </div>`;
+        pages.appendChild(row);
+
+        const canvas = row.querySelector("canvas");
+        canvas.width = viewport.width * ratio;
+        canvas.height = viewport.height * ratio;
+        canvas.style.width = viewport.width + "px";
+        canvas.style.height = viewport.height + "px";
+        const ctx = canvas.getContext("2d");
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        const layer = row.querySelector(".page-layer");
+        layer._page = page;
+        layer._viewport = viewport;
+        wireDrawing(layer, n);
+        drawPage(n);
+      }
+    }
+
+    // Draw a box on the page with the mouse
+    function wireDrawing(layer, pageNum) {
+      layer.addEventListener("pointerdown", e => {
+        if (e.button !== 0 || e.target.closest(".popup")) return;
+        if (!activeKey) { toast("Pick an item above first, then drag over it on the page."); return; }
+        closePopup();
+        const box = layer.getBoundingClientRect();
+        const x0 = e.clientX - box.left, y0 = e.clientY - box.top;
+        const item = itemByKey[activeKey];
+        const draft = document.createElement("div");
+        draft.className = "hl draft";
+        draft.style.setProperty("--c", item.color);
+        layer.appendChild(draft);
+        layer.setPointerCapture(e.pointerId);
+
+        const move = ev => {
+          const x1 = Math.min(Math.max(ev.clientX - box.left, 0), box.width);
+          const y1 = Math.min(Math.max(ev.clientY - box.top, 0), box.height);
+          Object.assign(draft.style, {
+            left: Math.min(x0, x1) + "px", top: Math.min(y0, y1) + "px",
+            width: Math.abs(x1 - x0) + "px", height: Math.abs(y1 - y0) + "px"
+          });
+        };
+        const up = async ev => {
+          layer.removeEventListener("pointermove", move);
+          layer.removeEventListener("pointerup", up);
+          const w = draft.offsetWidth, h = draft.offsetHeight;
+          if (w < 6 || h < 6) { draft.remove(); return; }
+          const rect = { x: draft.offsetLeft / box.width, y: draft.offsetTop / box.height, w: w / box.width, h: h / box.height };
+          const text = await textInBox(layer, rect);
+          askValue(layer, pageNum, item, rect, text, draft);
+        };
+        layer.addEventListener("pointermove", move);
+        layer.addEventListener("pointerup", up);
+      });
+    }
+
+    // Read the PDF text that sits inside the box, so the popup can pre-fill it
+    async function textInBox(layer, rect) {
+      try {
+        const vp = layer._viewport;
+        const content = await layer._page.getTextContent();
+        const L = rect.x * vp.width, T = rect.y * vp.height, R = L + rect.w * vp.width, B = T + rect.h * vp.height;
+        const hits = [];
+        for (const it of content.items) {
+          if (!it.str || !it.str.trim()) continue;
+          const tx = pdfjsLib.Util.transform(vp.transform, it.transform);
+          const h = Math.hypot(tx[2], tx[3]);
+          const w = it.width * vp.scale;
+          const x0 = tx[4], x1 = tx[4] + w, cy = tx[5] - h / 2;
+          if (cy < T || cy > B || x1 < L || x0 > R || w <= 0) continue;
+          // A text run is often a whole line; keep only the characters inside the box
+          const n = it.str.length;
+          const a = Math.max(0, Math.round(((L - x0) / w) * n));
+          const b = Math.min(n, Math.round(((R - x0) / w) * n));
+          const part = it.str.slice(a, b);
+          if (part.trim()) hits.push({ s: part, x: x0, y: tx[5] });
+        }
+        hits.sort((a, b) => Math.abs(a.y - b.y) > 3 ? a.y - b.y : a.x - b.x);
+        return hits.map(h => h.s).join(" ").replace(/\s+/g, " ").trim();
+      } catch { return ""; }
+    }
+
+    // Popup to type what was highlighted
+    function askValue(layer, pageNum, item, rect, prefill, draft, existing) {
+      closePopup();
+      const pop = document.createElement("div");
+      pop.className = "popup";
+      pop.style.setProperty("--c", item.color);
+      const field = item.multi ? `<textarea>${esc(prefill)}</textarea>` : `<input value="${esc(prefill)}">`;
+      pop.innerHTML = `<label>${item.label}</label>${field}<div class="btns"><button class="cancel">Cancel</button><button class="save">Save</button></div>`;
+
+      const vw = layer.clientWidth, vh = layer.clientHeight;
+      let left = rect.x * vw, top = (rect.y + rect.h) * vh + 6;
+      left = Math.min(left, vw - 280);
+      if (top > vh - 140) top = Math.max(0, rect.y * vh - 140);
+      pop.style.left = Math.max(0, left) + "px";
+      pop.style.top = top + "px";
+      layer.appendChild(pop);
+      pop.addEventListener("pointerdown", e => e.stopPropagation());
+
+      const input = pop.querySelector("input, textarea");
+      input.focus(); input.select();
+
+      const cancel = () => { if (draft) draft.remove(); closePopup(); };
+      const save = () => {
+        const value = input.value.trim();
+        if (!value) { input.focus(); toast("Type what you highlighted, or press Cancel."); return; }
+        if (existing) existing.value = value;
+        else findings.push({ id: nextId++, docId: currentDoc.id, page: pageNum, key: item.key, value, rect });
+        if (draft) draft.remove();
+        closePopup();
+        if (!existing) setActive(null);
+        drawPage(pageNum);
+        refreshCounts();
+        syncOverview();
+        renderDocList();
+      };
+      pop.querySelector(".cancel").onclick = cancel;
+      pop.querySelector(".save").onclick = save;
+      input.addEventListener("keydown", e => {
+        if (e.key === "Enter" && (!item.multi || !e.shiftKey)) { e.preventDefault(); save(); }
+        if (e.key === "Escape") { e.stopPropagation(); cancel(); }
+      });
+      openPopup = { el: pop, cancel };
+    }
+    function closePopup() {
+      if (openPopup) { const p = openPopup; openPopup = null; p.el.remove(); }
+      document.querySelectorAll(".hl.draft").forEach(d => d.remove());
+    }
+
+    // Draw saved highlights and the left-side list for one page
+    function drawPage(pageNum) {
+      const layer = document.querySelector(`.page-layer[data-page="${pageNum}"]`);
+      const side = document.querySelector(`.page-side[data-page="${pageNum}"]`);
+      if (!layer || !side) return;
+      layer.querySelectorAll(".hl:not(.draft)").forEach(h => h.remove());
+      const onPage = findings.filter(f => f.docId === currentDoc.id && f.page === pageNum);
+
+      for (const f of onPage) {
+        const it = itemByKey[f.key];
+        const hl = document.createElement("div");
+        hl.className = "hl";
+        hl.title = `${it.label}: ${f.value}`;
+        hl.style.setProperty("--c", it.color);
+        Object.assign(hl.style, { left: f.rect.x * 100 + "%", top: f.rect.y * 100 + "%", width: f.rect.w * 100 + "%", height: f.rect.h * 100 + "%" });
+        layer.prepend(hl);
+      }
+
+      side.innerHTML = `<h4>Page ${pageNum}</h4>` + (onPage.length
+        ? onPage.map(f => {
+            const it = itemByKey[f.key];
+            return `<div class="finding" style="--c:${it.color}" data-id="${f.id}" title="Click to edit">
+                      <div class="name">${it.label}</div><div class="val">${esc(f.value)}</div>
+                      <button title="Remove">×</button></div>`;
+          }).join("")
+        : `<div class="none">Nothing found on this page yet.</div>`);
+
+      side.querySelectorAll(".finding").forEach(el => {
+        const f = findings.find(x => x.id === +el.dataset.id);
+        el.querySelector("button").onclick = e => {
+          e.stopPropagation();
+          findings = findings.filter(x => x !== f);
+          drawPage(pageNum); refreshCounts(); syncOverview(); renderDocList();
+        };
+        el.style.cursor = "pointer";
+        el.onclick = () => askValue(layer, pageNum, itemByKey[f.key], f.rect, f.value, null, f);
+      });
+    }
+
+    // Show a check and count on each item once it's been found
+    function refreshCounts() {
+      chips.querySelectorAll(".chip").forEach(c => {
+        const n = findings.filter(f => f.key === c.dataset.key).length;
+        c.classList.toggle("found", n > 0);
+        c.querySelector(".count").textContent = n ? `✓ ${n}` : "";
+      });
+    }
+
+    // Copy found values into the Overview tab
+    function syncOverview() {
+      for (const it of ITEMS) {
+        const el = $(it.target);
+        const found = findings.filter(f => f.key === it.key);
+        const value = it.multi ? found.map(f => f.value).join("\n") : (found.length ? found[found.length - 1].value : "");
+        // Only overwrite what we filled in before, never something typed by hand
+        if (value) {
+          el.value = value;
+          lastAuto[it.target] = value;
+        } else if (lastAuto[it.target] !== undefined && el.value === lastAuto[it.target]) {
+          el.value = "";
+          delete lastAuto[it.target];
+        }
+        const auto = !!value;
+        el.classList.toggle("auto", auto);
+        el.style.borderLeftColor = auto ? it.color : "";
+      }
+    }
+
+    show(0);
   </script>
 </body>
 </html>
