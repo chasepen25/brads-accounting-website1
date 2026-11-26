@@ -4,8 +4,104 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cost Seg Professional</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f4f6f9;
+      color: #1f2937;
+    }
+    header {
+      background: #0f2a4a;
+      color: #fff;
+      padding: 18px 28px;
+    }
+    header h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: .3px; }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      background: #fff;
+      border-bottom: 1px solid #d9dee5;
+      padding: 0 20px;
+    }
+    nav button {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 14px 14px 11px;
+      font: inherit;
+      font-size: 14px;
+      color: #4b5563;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    nav button:hover { color: #0f2a4a; background: #f4f6f9; }
+    nav button.active {
+      color: #0f2a4a;
+      font-weight: 600;
+      border-bottom-color: #2f80ed;
+    }
+    main { padding: 28px; max-width: 1100px; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .panel h2 { margin: 0 0 6px; font-size: 20px; }
+    .panel p { margin: 0; color: #6b7280; }
+    .card {
+      margin-top: 20px;
+      background: #fff;
+      border: 1px dashed #c3cad4;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      color: #9ca3af;
+    }
+  </style>
 </head>
 <body>
-  <h1>Cost Seg Professional</h1>
+  <header>
+    <h1>Cost Seg Professional</h1>
+  </header>
+
+  <nav id="tabs"></nav>
+  <main id="panels"></main>
+
+  <script>
+    const tabs = [
+      ["Overview", "Property summary and study status."],
+      ["Workpapers", "Source documents and supporting files."],
+      ["Bases", "Purchase price, land allocation, and depreciable basis."],
+      ["Takeoffs", "Quantity takeoffs by building component."],
+      ["Exterior", "Site work and land improvements."],
+      ["Electrical", "Electrical systems and dedicated circuits."],
+      ["Depr Adj", "Depreciation adjustments and catch-up."],
+      ["Unit Cost Detail", "Unit costs with location adjustments."],
+      ["Indirect Costs", "Soft costs allocated across components."],
+      ["Depreciation Report", "MACRS schedules by asset class."],
+      ["Review & Deliver", "Final checks and client deliverables."]
+    ];
+
+    const nav = document.getElementById("tabs");
+    const main = document.getElementById("panels");
+
+    tabs.forEach(([name, desc], i) => {
+      const btn = document.createElement("button");
+      btn.textContent = name;
+      btn.onclick = () => show(i);
+      nav.appendChild(btn);
+
+      const panel = document.createElement("section");
+      panel.className = "panel";
+      panel.innerHTML = `<h2>${name}</h2><p>${desc}</p><div class="card">${name} content goes here</div>`;
+      main.appendChild(panel);
+    });
+
+    function show(i) {
+      nav.querySelectorAll("button").forEach((b, j) => b.classList.toggle("active", i === j));
+      main.querySelectorAll(".panel").forEach((p, j) => p.classList.toggle("active", i === j));
+    }
+
+    show(0);
+  </script>
 </body>
 </html>
