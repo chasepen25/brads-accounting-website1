@@ -35,7 +35,7 @@
       border-radius: 8px; padding: 40px; text-align: center; color: #9ca3af;
     }
 
-    /* Overview form */
+    /* Forms */
     .section {
       margin-top: 20px; background: #fff; border: 1px solid #d9dee5;
       border-radius: 8px; padding: 20px 22px;
@@ -43,11 +43,13 @@
     .section h3 { margin: 0 0 14px; font-size: 15px; color: #0f2a4a; }
     .section .hint { margin: -8px 0 14px; font-size: 12px; color: #6b7280; }
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 18px; }
-    .field { display: flex; flex-direction: column; gap: 5px; }
+    .grid.four { grid-template-columns: repeat(4, 1fr); }
+    .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
     .field.wide { grid-column: 1 / -1; }
+    .field.two { grid-column: span 2; }
     .field label { font-size: 12px; font-weight: 600; color: #4b5563; }
     .field input, .field select, .field textarea {
-      font: inherit; font-size: 14px; color: #1f2937;
+      font: inherit; font-size: 14px; color: #1f2937; width: 100%;
       border: 1px solid #c9d0da; border-radius: 6px; padding: 8px 10px; background: #fff;
     }
     .field textarea { min-height: 80px; resize: vertical; }
@@ -55,10 +57,19 @@
       outline: none; border-color: #2f80ed; box-shadow: 0 0 0 3px #2f80ed22;
     }
     .field .auto { border-left-width: 5px; }
-    .field label.check { display: flex; align-items: center; gap: 8px; font-weight: 500; color: #1f2937; font-size: 14px; margin-top: 4px; cursor: pointer; }
-    .field label.check input { width: 16px; height: 16px; margin: 0; }
+    .field label.check, label.check {
+      display: flex; align-items: center; gap: 8px; font-weight: 500; color: #1f2937;
+      font-size: 14px; margin-top: 4px; cursor: pointer;
+    }
+    label.check input { width: 16px; height: 16px; margin: 0; flex-shrink: 0; }
     .hidden { display: none !important; }
-    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 800px) { .grid, .grid.four { grid-template-columns: 1fr; } .field.two { grid-column: auto; } }
+
+    .seg { display: inline-flex; border: 1px solid #c9d0da; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
+    .seg button { border: 0; background: #fff; font: inherit; font-size: 13px; padding: 0 10px; cursor: pointer; color: #4b5563; }
+    .seg button.on { background: #0f2a4a; color: #fff; }
+    .with-seg { display: flex; gap: 6px; }
+    .with-seg input { flex: 1; min-width: 0; }
 
     /* Workpapers */
     .dropzone {
@@ -124,6 +135,7 @@
     }
     .finding .name { color: var(--c); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; }
     .finding .val { color: #1f2937; word-break: break-word; }
+    .finding .meta { color: #6b7280; font-size: 11px; margin-top: 2px; }
     .finding button {
       position: absolute; top: 4px; right: 4px; border: 0; background: none;
       color: #9ca3af; cursor: pointer; font-size: 15px; line-height: 1;
@@ -143,25 +155,49 @@
     .hl.draft { border-style: dashed; }
 
     .popup {
-      position: absolute; z-index: 30; width: 270px; background: #fff;
-      border: 2px solid var(--c); border-radius: 8px; padding: 10px;
-      box-shadow: 0 8px 24px #0003;
+      position: absolute; z-index: 30; width: 300px; background: #fff;
+      border: 2px solid var(--c); border-radius: 8px; padding: 12px;
+      box-shadow: 0 8px 24px #0003; cursor: default;
     }
-    .popup label { display: block; font-size: 12px; font-weight: 700; color: var(--c); margin-bottom: 6px; }
-    .popup input, .popup textarea {
+    .popup .title { font-size: 12px; font-weight: 700; color: var(--c); margin-bottom: 8px; }
+    .popup .row { margin-bottom: 9px; }
+    .popup .row > label { display: block; font-size: 11px; font-weight: 600; color: #4b5563; margin-bottom: 4px; }
+    .popup input:not([type=checkbox]), .popup textarea, .popup select {
       width: 100%; font: inherit; font-size: 14px; border: 1px solid #c9d0da;
-      border-radius: 6px; padding: 7px 9px;
+      border-radius: 6px; padding: 7px 9px; background: #fff;
     }
     .popup textarea { min-height: 60px; resize: vertical; }
-    .popup .btns { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
-    .popup button { font: inherit; font-size: 13px; border-radius: 6px; padding: 6px 12px; cursor: pointer; border: 1px solid #c9d0da; background: #fff; }
-    .popup button.save { background: var(--c); color: #fff; border-color: var(--c); }
+    .popup .btns { display: flex; justify-content: flex-end; gap: 6px; margin-top: 4px; }
+    .popup .btns button { font: inherit; font-size: 13px; border-radius: 6px; padding: 6px 12px; cursor: pointer; border: 1px solid #c9d0da; background: #fff; }
+    .popup .btns button.save { background: var(--c); color: #fff; border-color: var(--c); }
+    .popup .err { color: #dc2626; font-size: 12px; margin-top: 4px; }
 
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
       background: #0f2a4a; color: #fff; padding: 10px 16px; border-radius: 8px;
       font-size: 14px; z-index: 100; box-shadow: 0 6px 20px #0003;
     }
+
+    /* Bases */
+    .bases-top { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 12px; flex-wrap: wrap; }
+    .bases-top .total { font-size: 14px; color: #4b5563; }
+    .bases-top .total b { color: #0f2a4a; font-size: 16px; }
+    .btn { font: inherit; font-size: 14px; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid #c9d0da; background: #fff; color: #1f2937; }
+    .btn.primary { background: #0f2a4a; border-color: #0f2a4a; color: #fff; }
+    .btn.danger { color: #dc2626; }
+    .basis-card .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; }
+    .basis-card .head .tag { font-size: 11px; color: #6b7280; }
+    .basis-card .head .tag b { color: #4f46e5; }
+    .bonus { display: flex; gap: 10px; align-items: flex-start; background: #f4f7fb; border: 1px solid #d9e2ee; border-radius: 8px; padding: 12px 14px; margin-top: 16px; }
+    .bonus .pct { font-size: 26px; font-weight: 700; color: #0f2a4a; min-width: 70px; }
+    .bonus .why { font-size: 13px; color: #4b5563; flex: 1; }
+    .bonus .why b { color: #1f2937; }
+    .bonus .ovr { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #4b5563; }
+    .bonus .ovr input { width: 70px; font: inherit; font-size: 13px; border: 1px solid #c9d0da; border-radius: 6px; padding: 5px 7px; }
+    .summary { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 14px; font-size: 13px; color: #4b5563; }
+    .summary b { display: block; font-size: 16px; color: #0f2a4a; }
+    .fromwp { border-left: 5px solid #94a3b8 !important; }
+    .note { font-size: 12px; color: #6b7280; margin-top: 16px; line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -243,7 +279,7 @@
 
     <div class="section">
       <h3>From workpapers</h3>
-      <div class="hint">Fills in automatically when you highlight these on the Workpapers tab. You can still edit them.</div>
+      <div class="hint">Fills in automatically when you highlight these on the Workpapers tab (purchase values). Improvements show on the Bases tab.</div>
       <div class="grid">
         <div class="field"><label for="parcelNumber">Parcel number</label><input id="parcelNumber"></div>
         <div class="field"><label for="purchasePrice">Purchase price</label><input id="purchasePrice"></div>
@@ -265,12 +301,28 @@
     </div>
   </template>
 
+  <!-- ===================== BASES ===================== -->
+  <template id="bases-panel">
+    <div class="bases-top">
+      <div class="total" id="basesTotal"></div>
+      <button class="btn primary" id="addBasis">＋ Add basis</button>
+    </div>
+    <div id="basesList"></div>
+    <div class="note">
+      <b>Bonus %</b> is set by the tax law in effect for the date the property was acquired (binding contract date),
+      applied to the year it was placed in service: IRC §168(k) as amended by the PATH Act (2015), the Tax Cuts and Jobs Act (2017),
+      and the One Big Beautiful Bill Act (2025, IRS Notice 2026-11). Bonus applies only to the 5, 7 and 15-year property found in the study,
+      not to the 27.5/39-year building or land. Not modeled: the extra year for long-production-period property and the 2025 transitional
+      40% election. Use the override when a different rate applies.
+    </div>
+  </template>
+
   <script src="vendor/pdf.min.js"></script>
   <script>
     const tabs = [
       ["Workpapers", "Upload the documents that support the study's values in an audit, and highlight where each value appears."],
       ["Overview", "Property summary and study details."],
-      ["Bases", "Purchase price, land allocation, and depreciable basis."],
+      ["Bases", "Each basis being studied: the purchase, improvements, and any others. Fills in from Workpapers."],
       ["Takeoffs", "Quantity takeoffs by building component."],
       ["Exterior", "Site work and land improvements."],
       ["Electrical", "Electrical systems and dedicated circuits."],
@@ -284,7 +336,7 @@
     // ---------- Tabs ----------
     const nav = document.getElementById("tabs");
     const main = document.getElementById("panels");
-    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form" };
+    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form", "Bases": "bases-panel" };
 
     tabs.forEach(([name, desc], i) => {
       const btn = document.createElement("button");
@@ -309,12 +361,35 @@
     }
 
     const $ = id => document.getElementById(id);
-    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     function toast(msg) {
       const t = document.createElement("div");
       t.className = "toast"; t.textContent = msg;
       document.body.appendChild(t);
       setTimeout(() => t.remove(), 2200);
+    }
+    // "$1,234.50" -> 1234.5 ; "" -> null
+    function num(v) {
+      if (v === null || v === undefined) return null;
+      const s = String(v).replace(/[^0-9.\-]/g, "");
+      if (!s || s === "-" || s === ".") return null;
+      const n = parseFloat(s);
+      return isFinite(n) ? n : null;
+    }
+    const money = n => n === null || n === undefined ? "—" : "$" + Math.round(n).toLocaleString();
+    // Accepts 03/15/2026, 3-15-26, 2026-03-15, March 15, 2026 -> "2026-03-15"
+    function toISODate(v) {
+      if (!v) return "";
+      const s = String(v).trim();
+      let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+      m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
+      if (m) {
+        let y = +m[3]; if (y < 100) y += y < 70 ? 2000 : 1900;
+        return `${y}-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}`;
+      }
+      const d = new Date(s);
+      return isNaN(d) ? "" : d.toISOString().slice(0, 10);
     }
 
     // ---------- Overview: property type, asset class, building life ----------
@@ -343,13 +418,11 @@
       if (isCustom) customPropertyType.focus();
 
       const options = ASSET_CLASSES[type] || [];
-      // Custom types get a free-text asset class
       const freeText = type !== "" && options.length === 0;
       assetClass.classList.toggle("hidden", freeText);
       customAssetClass.classList.toggle("hidden", !freeText);
       customAssetClass.value = "";
 
-      // Short-term rental checkbox only for Residential
       const isResidential = type === "Residential";
       $("strRow").classList.toggle("hidden", !isResidential);
       if (!isResidential) $("shortTermRental").checked = false;
@@ -372,7 +445,10 @@
     $("shortTermRental").addEventListener("change", setBuildingLife);
 
     // ---------- Workpapers ----------
-    // Each item: key, label, color, the Overview field it fills
+    const SUPPORT_DOCS = ["Settlement Statement", "Closing Disclosure", "Purchase Agreement", "Appraisal",
+      "Construction Cost Detail", "General Ledger", "Depreciation Schedule", "Documents Prepared by Client"];
+
+    // relates: the item can belong to the purchase or an improvement
     const ITEMS = [
       { key: "owner",     label: "Owner Name",       color: "#2563eb", target: "taxpayerEntity" },
       { key: "address",   label: "Address",          color: "#16a34a", target: "address" },
@@ -381,10 +457,11 @@
       { key: "lot",       label: "Lot Size",         color: "#0d9488", target: "lotSize" },
       { key: "yearBuilt", label: "Year Built",       color: "#db2777", target: "yearBuilt" },
       { key: "price",     label: "Purchase Price",   color: "#dc2626", target: "purchasePrice" },
+      { key: "impCost",   label: "Improvement Cost", color: "#4f46e5", improvementOnly: true },
       { key: "land",      label: "Land Value",       color: "#65a30d", target: "landValue" },
-      { key: "inService", label: "In-Service Date",  color: "#0891b2", target: "inServiceDate" },
-      { key: "acq",       label: "Acquisition Date", color: "#ca8a04", target: "acquisitionDate" },
-      { key: "priorDepr", label: "Prior Depr Taken", color: "#92400e", target: "priorDepr" },
+      { key: "acq",       label: "Acquisition Date", color: "#ca8a04", target: "acquisitionDate", relates: true },
+      { key: "inService", label: "In-Service Date",  color: "#0891b2", target: "inServiceDate", relates: true },
+      { key: "priorDepr", label: "Prior Depr Taken", color: "#92400e", target: "priorDepr", relates: true },
       { key: "note",      label: "Note",             color: "#64748b", target: "workpaperNotes", multi: true }
     ];
     const itemByKey = Object.fromEntries(ITEMS.map(it => [it.key, it]));
@@ -393,13 +470,23 @@
       pdfjsLib.GlobalWorkerOptions.workerSrc = window.PDF_WORKER_URL || "vendor/pdf.worker.min.js";
     }
 
-    const docs = [];        // { id, name, pdf, numPages }
-    let findings = [];      // { id, docId, page, key, value, rect: {x,y,w,h} as fractions of the page }
+    const docs = [];        // { id, name, pdf, numPages, lastSupport }
+    // finding: { id, docId, page, key, value, rect, support, relatesTo: "purchase" | "imp:N", landMode: "$" | "%", subtractLand }
+    let findings = [];
     let currentDoc = null;
     let activeKey = null;
     let openPopup = null;
     let nextId = 1;
     const lastAuto = {};    // what we last auto-filled into each Overview field
+
+    // Improvement numbers that exist in the findings
+    function improvementNums() {
+      const set = new Set();
+      findings.forEach(f => { if (f.relatesTo && f.relatesTo.startsWith("imp:")) set.add(+f.relatesTo.slice(4)); });
+      return [...set].sort((a, b) => a - b);
+    }
+    const impName = n => (bases.find(b => b.link === "imp:" + n)?.name) || `Improvement ${n}`;
+    const relatesLabel = r => r === "purchase" ? "Purchase" : impName(+r.slice(4));
 
     // Item chips
     const chips = $("chips");
@@ -428,7 +515,6 @@
     ["dragenter", "dragover"].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add("over"); }));
     ["dragleave", "drop"].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove("over"); }));
     dropzone.addEventListener("drop", e => addFiles(e.dataTransfer.files));
-    // Don't let a missed drop open the PDF in the browser tab
     window.addEventListener("dragover", e => e.preventDefault());
     window.addEventListener("drop", e => e.preventDefault());
 
@@ -440,7 +526,7 @@
         try {
           const data = new Uint8Array(await file.arrayBuffer());
           const pdf = await pdfjsLib.getDocument({ data }).promise;
-          const doc = { id: nextId++, name: file.name, pdf, numPages: pdf.numPages };
+          const doc = { id: nextId++, name: file.name, pdf, numPages: pdf.numPages, lastSupport: "" };
           docs.push(doc);
           currentDoc = doc;
         } catch (err) {
@@ -478,9 +564,7 @@
       docs.splice(docs.indexOf(doc), 1);
       doc.pdf.destroy();
       if (currentDoc === doc) { currentDoc = docs[docs.length - 1] || null; setActive(null); }
-      refreshCounts();
-      syncOverview();
-      renderDocList();
+      afterFindingsChange();
       renderPages();
     }
 
@@ -551,14 +635,14 @@
             width: Math.abs(x1 - x0) + "px", height: Math.abs(y1 - y0) + "px"
           });
         };
-        const up = async ev => {
+        const up = async () => {
           layer.removeEventListener("pointermove", move);
           layer.removeEventListener("pointerup", up);
           const w = draft.offsetWidth, h = draft.offsetHeight;
           if (w < 6 || h < 6) { draft.remove(); return; }
           const rect = { x: draft.offsetLeft / box.width, y: draft.offsetTop / box.height, w: w / box.width, h: h / box.height };
           const text = await textInBox(layer, rect);
-          askValue(layer, pageNum, item, rect, text, draft);
+          askValue(layer, pageNum, item, rect, { value: text }, draft, null);
         };
         layer.addEventListener("pointermove", move);
         layer.addEventListener("pointerup", up);
@@ -591,45 +675,90 @@
       } catch { return ""; }
     }
 
-    // Popup to type what was highlighted
-    function askValue(layer, pageNum, item, rect, prefill, draft, existing) {
+    // Popup: type what was highlighted, pick the supporting document, and item-specific options
+    function askValue(layer, pageNum, item, rect, init, draft, existing) {
       closePopup();
+      const doc = currentDoc;
       const pop = document.createElement("div");
       pop.className = "popup";
       pop.style.setProperty("--c", item.color);
-      const field = item.multi ? `<textarea>${esc(prefill)}</textarea>` : `<input value="${esc(prefill)}">`;
-      pop.innerHTML = `<label>${item.label}</label>${field}<div class="btns"><button class="cancel">Cancel</button><button class="save">Save</button></div>`;
 
-      const vw = layer.clientWidth, vh = layer.clientHeight;
-      let left = rect.x * vw, top = (rect.y + rect.h) * vh + 6;
-      left = Math.min(left, vw - 280);
-      if (top > vh - 140) top = Math.max(0, rect.y * vh - 140);
-      pop.style.left = Math.max(0, left) + "px";
-      pop.style.top = top + "px";
+      // "Relates to" choices: purchase, each improvement found so far, and a new improvement
+      const imps = improvementNums();
+      const nextImp = (imps[imps.length - 1] || 0) + 1;
+      const relOpts = [
+        ...(item.improvementOnly ? [] : [["purchase", "Overall purchase"]]),
+        ...imps.map(n => ["imp:" + n, impName(n)]),
+        ["imp:" + nextImp, `New improvement (${impName(nextImp)})`]
+      ];
+      const relDefault = init.relatesTo || (item.improvementOnly ? "imp:" + nextImp : "purchase");
+      const supportDefault = init.support || doc.lastSupport || "";
+      const landMode = init.landMode || "$";
+      const subtract = init.subtractLand !== undefined ? init.subtractLand : true;
+
+      const valueField = item.multi
+        ? `<textarea class="v">${esc(init.value)}</textarea>`
+        : item.key === "land"
+          ? `<div class="with-seg"><input class="v" value="${esc(init.value)}">
+               <span class="seg"><button type="button" data-mode="$" class="${landMode === "$" ? "on" : ""}">$</button><button type="button" data-mode="%" class="${landMode === "%" ? "on" : ""}">%</button></span></div>`
+          : `<input class="v" value="${esc(init.value)}">`;
+
+      pop.innerHTML = `
+        <div class="title">${item.label}</div>
+        <div class="row"><label>${item.key === "land" ? "Land value ($ amount or % of purchase price)" : "Value"}</label>${valueField}</div>
+        ${item.key === "land" ? `<div class="row"><label class="check"><input type="checkbox" class="sub" ${subtract ? "checked" : ""}> Subtract land value from purchase price</label></div>` : ""}
+        ${item.relates || item.improvementOnly ? `<div class="row"><label>${item.improvementOnly ? "Which improvement" : "Relates to"}</label>
+          <select class="rel">${relOpts.map(([v, l]) => `<option value="${v}" ${v === relDefault ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>` : ""}
+        <div class="row"><label>Supporting document</label>
+          <select class="sup"><option value="">Select…</option>${SUPPORT_DOCS.map(d => `<option ${d === supportDefault ? "selected" : ""}>${d}</option>`).join("")}</select></div>
+        <div class="err hidden"></div>
+        <div class="btns"><button class="cancel">Cancel</button><button class="save">Save</button></div>`;
+
       layer.appendChild(pop);
       pop.addEventListener("pointerdown", e => e.stopPropagation());
 
-      const input = pop.querySelector("input, textarea");
+      // Place below the box, or above it if there isn't room
+      const vw = layer.clientWidth, vh = layer.clientHeight, ph = pop.offsetHeight;
+      let left = Math.min(rect.x * vw, vw - pop.offsetWidth - 4);
+      let top = (rect.y + rect.h) * vh + 6;
+      if (top + ph > vh) top = Math.max(0, rect.y * vh - ph - 6);
+      pop.style.left = Math.max(0, left) + "px";
+      pop.style.top = top + "px";
+
+      let mode = landMode;
+      pop.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+        mode = b.dataset.mode;
+        pop.querySelectorAll(".seg button").forEach(x => x.classList.toggle("on", x === b));
+      });
+
+      const input = pop.querySelector(".v");
       input.focus(); input.select();
+      const err = pop.querySelector(".err");
+      const fail = msg => { err.textContent = msg; err.classList.remove("hidden"); };
 
       const cancel = () => { if (draft) draft.remove(); closePopup(); };
       const save = () => {
         const value = input.value.trim();
-        if (!value) { input.focus(); toast("Type what you highlighted, or press Cancel."); return; }
-        if (existing) existing.value = value;
-        else findings.push({ id: nextId++, docId: currentDoc.id, page: pageNum, key: item.key, value, rect });
+        const support = pop.querySelector(".sup").value;
+        if (!value) { input.focus(); return fail("Type what you highlighted."); }
+        if (!support) { pop.querySelector(".sup").focus(); return fail("Pick the supporting document."); }
+        const data = { value, support };
+        if (item.relates || item.improvementOnly) data.relatesTo = pop.querySelector(".rel").value;
+        if (item.key === "land") { data.landMode = mode; data.subtractLand = pop.querySelector(".sub").checked; }
+        doc.lastSupport = support;
+
+        if (existing) Object.assign(existing, data);
+        else findings.push({ id: nextId++, docId: doc.id, page: pageNum, key: item.key, rect, ...data });
         if (draft) draft.remove();
         closePopup();
         if (!existing) setActive(null);
         drawPage(pageNum);
-        refreshCounts();
-        syncOverview();
-        renderDocList();
+        afterFindingsChange();
       };
       pop.querySelector(".cancel").onclick = cancel;
       pop.querySelector(".save").onclick = save;
-      input.addEventListener("keydown", e => {
-        if (e.key === "Enter" && (!item.multi || !e.shiftKey)) { e.preventDefault(); save(); }
+      pop.addEventListener("keydown", e => {
+        if (e.key === "Enter" && !(item.multi && e.shiftKey) && e.target.tagName !== "SELECT") { e.preventDefault(); save(); }
         if (e.key === "Escape") { e.stopPropagation(); cancel(); }
       });
       openPopup = { el: pop, cancel };
@@ -639,11 +768,16 @@
       document.querySelectorAll(".hl.draft").forEach(d => d.remove());
     }
 
+    function displayValue(f) {
+      if (f.key === "land") return (f.landMode === "%" ? `${num(f.value) ?? f.value}% of purchase price` : f.value);
+      return f.value;
+    }
+
     // Draw saved highlights and the left-side list for one page
     function drawPage(pageNum) {
       const layer = document.querySelector(`.page-layer[data-page="${pageNum}"]`);
       const side = document.querySelector(`.page-side[data-page="${pageNum}"]`);
-      if (!layer || !side) return;
+      if (!layer || !side || !currentDoc) return;
       layer.querySelectorAll(".hl:not(.draft)").forEach(h => h.remove());
       const onPage = findings.filter(f => f.docId === currentDoc.id && f.page === pageNum);
 
@@ -651,7 +785,7 @@
         const it = itemByKey[f.key];
         const hl = document.createElement("div");
         hl.className = "hl";
-        hl.title = `${it.label}: ${f.value}`;
+        hl.title = `${it.label}: ${displayValue(f)}`;
         hl.style.setProperty("--c", it.color);
         Object.assign(hl.style, { left: f.rect.x * 100 + "%", top: f.rect.y * 100 + "%", width: f.rect.w * 100 + "%", height: f.rect.h * 100 + "%" });
         layer.prepend(hl);
@@ -660,8 +794,11 @@
       side.innerHTML = `<h4>Page ${pageNum}</h4>` + (onPage.length
         ? onPage.map(f => {
             const it = itemByKey[f.key];
+            const rel = f.relatesTo && f.relatesTo !== "purchase" ? ` · ${esc(relatesLabel(f.relatesTo))}` : "";
+            const sub = f.key === "land" ? (f.subtractLand ? " · subtracted" : " · not subtracted") : "";
             return `<div class="finding" style="--c:${it.color}" data-id="${f.id}" title="Click to edit">
-                      <div class="name">${it.label}</div><div class="val">${esc(f.value)}</div>
+                      <div class="name">${it.label}${rel}</div><div class="val">${esc(displayValue(f))}</div>
+                      <div class="meta">${esc(f.support)}${sub}</div>
                       <button title="Remove">×</button></div>`;
           }).join("")
         : `<div class="none">Nothing found on this page yet.</div>`);
@@ -671,11 +808,17 @@
         el.querySelector("button").onclick = e => {
           e.stopPropagation();
           findings = findings.filter(x => x !== f);
-          drawPage(pageNum); refreshCounts(); syncOverview(); renderDocList();
+          drawPage(pageNum);
+          afterFindingsChange();
         };
         el.style.cursor = "pointer";
-        el.onclick = () => askValue(layer, pageNum, itemByKey[f.key], f.rect, f.value, null, f);
+        el.onclick = () => askValue(layer, pageNum, itemByKey[f.key], f.rect, f, null, f);
       });
+    }
+
+    function redrawAllPages() {
+      if (!currentDoc) return;
+      for (let n = 1; n <= currentDoc.numPages; n++) drawPage(n);
     }
 
     // Show a check and count on each item once it's been found
@@ -687,13 +830,30 @@
       });
     }
 
-    // Copy found values into the Overview tab
+    function afterFindingsChange() {
+      refreshCounts();
+      syncOverview();
+      syncBases();
+      renderDocList();
+    }
+
+    // Latest finding for an item (optionally for one purchase/improvement)
+    function latest(key, relatesTo) {
+      const list = findings.filter(f => f.key === key && (relatesTo === undefined || (f.relatesTo || "purchase") === relatesTo));
+      return list[list.length - 1] || null;
+    }
+
+    // Copy found purchase values into the Overview tab
     function syncOverview() {
       for (const it of ITEMS) {
+        if (!it.target) continue;
         const el = $(it.target);
-        const found = findings.filter(f => f.key === it.key);
-        const value = it.multi ? found.map(f => f.value).join("\n") : (found.length ? found[found.length - 1].value : "");
-        // Only overwrite what we filled in before, never something typed by hand
+        let value = "";
+        if (it.multi) value = findings.filter(f => f.key === it.key).map(f => f.value).join("\n");
+        else {
+          const f = latest(it.key, it.relates ? "purchase" : undefined);
+          if (f) value = displayValue(f);
+        }
         if (value) {
           el.value = value;
           lastAuto[it.target] = value;
@@ -701,12 +861,209 @@
           el.value = "";
           delete lastAuto[it.target];
         }
-        const auto = !!value;
-        el.classList.toggle("auto", auto);
-        el.style.borderLeftColor = auto ? it.color : "";
+        el.classList.toggle("auto", !!value);
+        el.style.borderLeftColor = value ? it.color : "";
       }
     }
 
+    // ---------- Bases ----------
+    const KINDS = ["Acquisition (building + land)", "New Construction", "Improvement", "Step Up"];
+    // basis: { id, link: "purchase" | "imp:N" | null, name, kind, amount, landMode, land, landSource,
+    //          subtractLand, acqDate, pisDate, fedDepr, bonusOverride, manual: Set of fields typed by hand }
+    let bases = [];
+
+    function newBasis(link, n) {
+      return {
+        id: nextId++, link,
+        name: link === "purchase" ? "Building" : link ? `Improvement ${n}` : `Basis ${bases.length + 1}`,
+        kind: link === "purchase" ? KINDS[0] : link ? "Improvement" : KINDS[0],
+        amount: "", landMode: "$", land: "", landSource: "", subtractLand: link === "purchase" || !link,
+        acqDate: "", pisDate: "", fedDepr: "", bonusOverride: "", manual: new Set()
+      };
+    }
+
+    const sourceOf = f => {
+      const d = docs.find(x => x.id === f.docId);
+      return `${f.support}${d ? ` (${d.name}, p. ${f.page})` : ""}`;
+    };
+
+    // Pull values from Workpapers into the linked bases (never over something typed by hand)
+    function syncBases() {
+      const links = [];
+      if (findings.some(f => ["price", "land", "acq", "inService", "priorDepr"].includes(f.key) && (f.relatesTo || "purchase") === "purchase")) links.push("purchase");
+      improvementNums().forEach(n => links.push("imp:" + n));
+
+      for (const link of links) {
+        let b = bases.find(x => x.link === link);
+        if (!b) {
+          b = newBasis(link, link === "purchase" ? 0 : +link.slice(4));
+          if (link === "purchase") bases.unshift(b); else bases.push(b);
+        }
+        const isP = link === "purchase";
+        const auto = {
+          amount: latest(isP ? "price" : "impCost", isP ? undefined : link),
+          acqDate: latest("acq", link),
+          pisDate: latest("inService", link),
+          fedDepr: latest("priorDepr", link)
+        };
+        const set = (field, v) => { if (!b.manual.has(field)) b[field] = v; };
+        set("amount", auto.amount ? String(num(auto.amount.value) ?? auto.amount.value) : "");
+        set("acqDate", auto.acqDate ? toISODate(auto.acqDate.value) : "");
+        set("pisDate", auto.pisDate ? toISODate(auto.pisDate.value) : "");
+        set("fedDepr", auto.fedDepr ? String(num(auto.fedDepr.value) ?? auto.fedDepr.value) : "");
+        b._auto = { amount: !!auto.amount, acqDate: !!auto.acqDate, pisDate: !!auto.pisDate, fedDepr: !!auto.fedDepr };
+        if (isP) {
+          const land = latest("land");
+          if (!b.manual.has("land")) {
+            b.land = land ? String(num(land.value) ?? land.value) : "";
+            b.landMode = land ? land.landMode : "$";
+          }
+          set("landSource", land ? sourceOf(land) : "");
+          set("subtractLand", land ? land.subtractLand : true);
+          b._auto.land = b._auto.landSource = !!land;
+        }
+      }
+      // Drop linked bases whose findings are all gone, unless something was typed by hand
+      bases = bases.filter(b => !b.link || links.includes(b.link) || b.manual.size > 0);
+      renderBases();
+      redrawAllPages();
+    }
+
+    // Bonus % from the law in effect when the property was acquired, for the year placed in service
+    function bonusFor(b) {
+      if (b.kind === "Step Up")
+        return { pct: 0, why: "<b>Stepped-up (inherited) basis</b> isn't acquired by purchase, so it doesn't qualify for bonus." };
+      if (!b.pisDate) return { pct: null, why: "Enter the in-service date to figure the bonus %." };
+      if (!b.acqDate) return { pct: null, why: b.kind === "New Construction"
+        ? "Enter the acquisition date (for new construction, the date construction began)."
+        : "Enter the acquisition (binding contract) date to figure the bonus %." };
+      const acq = b.acqDate, pis = b.pisDate, y = +pis.slice(0, 4);
+      if (pis < acq) return { pct: null, why: "The in-service date is before the acquisition date. Check the dates." };
+
+      if (acq >= "2025-01-20")
+        return { pct: 100, why: "<b>One Big Beautiful Bill Act:</b> acquired after Jan. 19, 2025, so it gets the permanent 100% bonus." };
+
+      if (acq >= "2017-09-28") {
+        const pct = y <= 2022 ? 100 : y === 2023 ? 80 : y === 2024 ? 60 : y === 2025 ? 40 : y === 2026 ? 20 : 0;
+        return { pct, why: `<b>Tax Cuts and Jobs Act:</b> acquired after Sept. 27, 2017 and before Jan. 20, 2025, so the phase-down applies for the year placed in service (${y}): ${pct}%.` };
+      }
+
+      // Acquired before Sept. 28, 2017
+      if (b.kind === KINDS[0])
+        return { pct: 0, why: "<b>Pre-TCJA:</b> used property bought before Sept. 28, 2017 doesn't qualify. Bonus then required original use." };
+      if (y < 2008) return { pct: null, why: "Placed in service before 2008. Check the rate by hand and use the override." };
+      let pct;
+      if (y <= 2009) pct = 50;
+      else if (y === 2010) pct = (acq >= "2010-09-09" && pis >= "2010-09-09") ? 100 : 50;
+      else if (y === 2011) pct = acq >= "2010-09-09" ? 100 : 50;
+      else if (y <= 2017) pct = 50;
+      else if (y === 2018) pct = 40;
+      else if (y === 2019) pct = 30;
+      else pct = 0;
+      return { pct, why: `<b>Pre-TCJA rules (PATH Act and earlier):</b> acquired before Sept. 28, 2017 and placed in service in ${y}: ${pct}%.` };
+    }
+
+    function landAmount(b) {
+      const amt = num(b.amount), land = num(b.land);
+      if (land === null) return null;
+      return b.landMode === "%" ? (amt === null ? null : amt * land / 100) : land;
+    }
+    function depreciable(b) {
+      const amt = num(b.amount);
+      if (amt === null) return null;
+      const land = b.subtractLand ? (landAmount(b) || 0) : 0;
+      return amt - land;
+    }
+
+    function renderBases() {
+      const list = $("basesList");
+      const total = bases.reduce((s, b) => s + (depreciable(b) || 0), 0);
+      $("basesTotal").innerHTML = bases.length
+        ? `${bases.length} bas${bases.length > 1 ? "es" : "is"} · Total depreciable basis <b>${money(total)}</b>`
+        : "No bases yet. Highlight a purchase price or improvement cost on Workpapers, or add one here.";
+
+      list.innerHTML = bases.map(b => {
+        const bonus = bonusFor(b);
+        const ovr = num(b.bonusOverride);
+        const shown = ovr !== null ? ovr : bonus.pct;
+        const wp = f => b._auto && b._auto[f] && !b.manual.has(f) ? "fromwp" : "";
+        const isAcq = b.kind === KINDS[0];
+        const la = landAmount(b);
+        return `
+        <div class="section basis-card" data-id="${b.id}">
+          <div class="head">
+            <div class="tag">${b.link ? `Linked to <b>Workpapers</b> (${b.link === "purchase" ? "purchase" : "improvement"})` : "Added by hand"}</div>
+            ${b.link ? "" : `<button class="btn danger" data-act="remove">Remove</button>`}
+          </div>
+          <div class="grid four">
+            <div class="field"><label>Name</label><input data-f="name" value="${esc(b.name)}"></div>
+            <div class="field"><label>Kind</label><select data-f="kind">${KINDS.map(k => `<option ${k === b.kind ? "selected" : ""}>${k}</option>`).join("")}</select></div>
+            <div class="field"><label>Amount</label><input data-f="amount" class="${wp("amount")}" value="${esc(b.amount)}" inputmode="decimal" placeholder="$"></div>
+            <div class="field"><label>Fed depreciation taken</label><input data-f="fedDepr" class="${wp("fedDepr")}" value="${esc(b.fedDepr)}" inputmode="decimal" placeholder="$"></div>
+
+            <div class="field"><label>Acquisition date</label><input type="date" data-f="acqDate" class="${wp("acqDate")}" value="${esc(b.acqDate)}"></div>
+            <div class="field"><label>In-service date</label><input type="date" data-f="pisDate" class="${wp("pisDate")}" value="${esc(b.pisDate)}"></div>
+
+            <div class="field ${isAcq ? "" : "hidden"}"><label>Land value</label>
+              <div class="with-seg"><input data-f="land" class="${wp("land")}" value="${esc(b.land)}" inputmode="decimal">
+                <span class="seg"><button type="button" data-mode="$" class="${b.landMode === "$" ? "on" : ""}">$</button><button type="button" data-mode="%" class="${b.landMode === "%" ? "on" : ""}">%</button></span></div>
+            </div>
+            <div class="field ${isAcq ? "" : "hidden"}"><label>Land source</label><input data-f="landSource" class="${wp("landSource")}" value="${esc(b.landSource)}"></div>
+            <div class="field wide ${isAcq ? "" : "hidden"}"><label class="check"><input type="checkbox" data-f="subtractLand" ${b.subtractLand ? "checked" : ""}> Subtract land value from purchase price</label></div>
+          </div>
+
+          <div class="summary">
+            <div>Amount<b>${money(num(b.amount))}</b></div>
+            ${isAcq ? `<div>Land${b.landMode === "%" && num(b.land) !== null ? ` (${num(b.land)}%)` : ""}<b>${b.subtractLand ? (la !== null ? "−" + money(la) : "—") : "not subtracted"}</b></div>` : ""}
+            <div>Depreciable basis<b>${money(isAcq ? depreciable(b) : num(b.amount))}</b></div>
+          </div>
+
+          <div class="bonus">
+            <div class="pct">${shown === null || shown === undefined ? "—" : shown + "%"}</div>
+            <div class="why">${ovr !== null ? `<b>Override in use.</b> Calculated rate: ${bonus.pct ?? "—"}%. ` : ""}${bonus.why}</div>
+            <label class="ovr">Override <input data-f="bonusOverride" value="${esc(b.bonusOverride)}" inputmode="decimal" placeholder="%"></label>
+          </div>
+        </div>`;
+      }).join("");
+
+      list.querySelectorAll(".basis-card").forEach(card => {
+        const b = bases.find(x => x.id === +card.dataset.id);
+        card.querySelectorAll("[data-f]").forEach(el => {
+          const f = el.dataset.f;
+          const ev = el.type === "checkbox" || el.tagName === "SELECT" || el.type === "date" ? "change" : "change";
+          el.addEventListener(ev, () => {
+            b[f] = el.type === "checkbox" ? el.checked : el.value;
+            if (!["name", "kind", "bonusOverride"].includes(f)) b.manual.add(f);
+            if (f === "kind" && b.kind !== KINDS[0]) b.subtractLand = false;
+            if (f === "kind" && b.kind === KINDS[0] && !b.manual.has("subtractLand")) b.subtractLand = true;
+            // Re-draw after focus moves, then put the cursor back where the user went
+            setTimeout(() => {
+              const a = document.activeElement, c = a && a.closest && a.closest(".basis-card");
+              const back = c && a.dataset.f ? [c.dataset.id, a.dataset.f] : null;
+              renderBases();
+              if (back) document.querySelector(`.basis-card[data-id="${back[0]}"] [data-f="${back[1]}"]`)?.focus();
+              if (f === "name") redrawAllPages();
+            });
+          });
+        });
+        card.querySelectorAll(".seg button").forEach(btn => btn.onclick = () => {
+          b.landMode = btn.dataset.mode; b.manual.add("land"); renderBases();
+        });
+        card.querySelector('[data-act="remove"]')?.addEventListener("click", () => {
+          bases = bases.filter(x => x !== b); renderBases();
+        });
+      });
+    }
+
+    $("addBasis").onclick = () => {
+      const b = newBasis(null);
+      b.manual.add("name");
+      bases.push(b);
+      renderBases();
+      document.querySelector(`.basis-card[data-id="${b.id}"] input`)?.focus();
+    };
+
+    renderBases();
     show(0);
   </script>
 </body>
