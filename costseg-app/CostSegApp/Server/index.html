@@ -197,6 +197,54 @@
     .summary { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 14px; font-size: 13px; color: #4b5563; }
     .summary b { display: block; font-size: 16px; color: #0f2a4a; }
     .fromwp { border-left: 5px solid #94a3b8 !important; }
+
+    /* Takeoffs */
+    .search-wrap { position: relative; }
+    .results {
+      position: absolute; left: 0; right: 0; top: 100%; z-index: 40; margin-top: 4px;
+      background: #fff; border: 1px solid #c9d0da; border-radius: 8px; box-shadow: 0 8px 24px #0002;
+      max-height: 340px; overflow-y: auto;
+    }
+    .result { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #f0f2f5; }
+    .result:last-child { border-bottom: 0; }
+    .result.hi, .result:hover { background: #eef5ff; }
+    .result .rn { font-weight: 600; font-size: 14px; }
+    .result .rm { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .result .none { color: #9ca3af; }
+    .csi { color: #9ca3af; font-weight: 400; font-size: 12px; }
+    .picked {
+      margin-top: 10px; border: 1px solid #d9e2ee; background: #f4f7fb; border-radius: 8px; padding: 10px 12px;
+      display: flex; justify-content: space-between; gap: 12px; align-items: flex-start;
+    }
+    .picked .pn { font-weight: 700; color: #0f2a4a; }
+    .picked .pd { font-size: 12px; color: #6b7280; margin-top: 3px; }
+    .picked button { border: 0; background: none; color: #9ca3af; cursor: pointer; font-size: 18px; line-height: 1; }
+    .lifeseg { display: inline-flex; gap: 6px; }
+    .lifeseg button {
+      font: inherit; font-size: 14px; font-weight: 600; min-width: 54px; padding: 8px 10px; border-radius: 6px; cursor: pointer;
+      border: 1.5px solid #c9d0da; background: #fff; color: #4b5563;
+    }
+    .lifeseg button.on { background: #0f2a4a; border-color: #0f2a4a; color: #fff; }
+    .srcseg { display: inline-flex; border: 1px solid #c9d0da; border-radius: 8px; overflow: hidden; }
+    .srcseg button { border: 0; background: #fff; font: inherit; font-size: 14px; padding: 8px 16px; cursor: pointer; color: #4b5563; }
+    .srcseg button.on { background: #0f2a4a; color: #fff; }
+    .add-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 12px; flex-wrap: wrap; }
+    .add-row .preview { font-size: 14px; color: #4b5563; }
+    .add-row .preview b { font-size: 18px; color: #0f2a4a; }
+    .tallies { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+    .tallies .section { margin-top: 20px; }
+    @media (max-width: 900px) { .tallies { grid-template-columns: 1fr; } }
+    table.t { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.t th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; color: #6b7280; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid #e5e9ef; }
+    table.t td { padding: 7px 8px; border-bottom: 1px solid #f0f2f5; vertical-align: top; }
+    table.t td.n, table.t th.n { text-align: right; white-space: nowrap; }
+    table.t tr.total td { font-weight: 700; border-top: 2px solid #d9dee5; border-bottom: 0; }
+    table.t select { font: inherit; font-size: 13px; border: 1px solid #c9d0da; border-radius: 5px; padding: 3px 5px; background: #fff; }
+    table.t .x { border: 0; background: none; color: #9ca3af; cursor: pointer; font-size: 16px; }
+    table.t .x:hover { color: #dc2626; }
+    .src-tag { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #eef2f7; color: #4b5563; white-space: nowrap; }
+    .src-tag.actual { background: #fef3c7; color: #92400e; }
+    .group-row td { background: #f8fafc; font-weight: 700; color: #0f2a4a; }
     .note { font-size: 12px; color: #6b7280; margin-top: 16px; line-height: 1.5; }
   </style>
 </head>
@@ -317,13 +365,62 @@
     </div>
   </template>
 
+  <!-- ===================== TAKEOFFS ===================== -->
+  <template id="takeoffs-panel">
+    <div class="section">
+      <h3>Add a line item</h3>
+      <div class="srcseg" id="toSource">
+        <button type="button" data-src="rs" class="on">Estimated (RS Means)</button>
+        <button type="button" data-src="actual">Actual cost</button>
+      </div>
+
+      <div id="toRsFields" style="margin-top:14px">
+        <div class="field search-wrap">
+          <label for="toSearch">Search RS Means items (name, CSI code, or description)</label>
+          <input id="toSearch" placeholder="Try cabinets, fence, 323123, parking light…" autocomplete="off">
+          <div class="results hidden" id="toResults"></div>
+        </div>
+        <div id="toPicked"></div>
+      </div>
+
+      <div id="toActualFields" class="hidden" style="margin-top:14px">
+        <div class="grid">
+          <div class="field two"><label for="toActName">Item name</label><input id="toActName" placeholder="e.g. Kitchen cabinets per invoice"></div>
+          <div class="field"><label for="toActCost">Actual cost ($)</label><input id="toActCost" inputmode="decimal" placeholder="$"></div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:14px">
+        <div class="field" id="toQtyField"><label for="toQty" id="toQtyLabel">Quantity</label><input id="toQty" inputmode="decimal" placeholder="0"></div>
+        <div class="field"><label for="toBasis">Basis to subtract from</label><select id="toBasis"></select></div>
+        <div class="field"><label for="toCategory">Category</label><select id="toCategory"></select></div>
+        <div class="field wide"><label>Life</label>
+          <div class="lifeseg" id="toLife"><button type="button" data-life="5">5 yr</button><button type="button" data-life="7">7 yr</button><button type="button" data-life="15">15 yr</button></div>
+        </div>
+      </div>
+
+      <div class="add-row">
+        <div class="preview" id="toPreview"></div>
+        <button class="btn primary" id="toAdd">＋ Add item</button>
+      </div>
+    </div>
+
+    <div class="tallies">
+      <div class="section"><h3>By basis</h3><div id="tallyBasis"></div></div>
+      <div class="section"><h3>By life</h3><div id="tallyLife"></div></div>
+    </div>
+    <div class="section"><h3>By category</h3><div id="tallyCategory"></div></div>
+    <div class="section"><h3>Line items</h3><div id="toItems"></div></div>
+  </template>
+
+  <script src="vendor/rsmeans-catalog.js"></script>
   <script src="vendor/pdf.min.js"></script>
   <script>
     const tabs = [
       ["Workpapers", "Upload the documents that support the study's values in an audit, and highlight where each value appears."],
       ["Overview", "Property summary and study details."],
       ["Bases", "Each basis being studied: the purchase, improvements, and any others. Fills in from Workpapers."],
-      ["Takeoffs", "Quantity takeoffs by building component."],
+      ["Takeoffs", "Line items reclassified out of each basis, estimated from RS Means or from actual costs."],
       ["Exterior", "Site work and land improvements."],
       ["Electrical", "Electrical systems and dedicated circuits."],
       ["Depr Adj", "Depreciation adjustments and catch-up."],
@@ -336,7 +433,7 @@
     // ---------- Tabs ----------
     const nav = document.getElementById("tabs");
     const main = document.getElementById("panels");
-    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form", "Bases": "bases-panel" };
+    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form", "Bases": "bases-panel", "Takeoffs": "takeoffs-panel" };
 
     tabs.forEach(([name, desc], i) => {
       const btn = document.createElement("button");
@@ -1053,8 +1150,10 @@
           bases = bases.filter(x => x !== b); renderBases();
         });
       });
+      if (typeof renderTakeoffs === "function") renderTakeoffs();
     }
 
+    // (the Takeoffs basis list follows the Bases tab)
     $("addBasis").onclick = () => {
       const b = newBasis(null);
       b.manual.add("name");
@@ -1062,6 +1161,218 @@
       renderBases();
       document.querySelector(`.basis-card[data-id="${b.id}"] input`)?.focus();
     };
+
+    // ---------- Takeoffs ----------
+    const CATALOG = (window.RS_CATALOG || []).map(r => ({ csi: r[0], name: r[1], unit: r[2], cost: r[3], desc: r[4], category: r[5], oldName: r[6] }));
+    const CATEGORIES = [...new Set(CATALOG.map(c => c.category))].filter(c => c !== "Other").sort().concat("Other");
+    const UNIT_LABEL = {
+      "L.F.": "Linear ft", "S.F.": "Sq ft", "Ea.": "Each", "Opng.": "Each opening", "Pair": "Pair", "S.Y.": "Sq yd",
+      "Riser": "Per riser", "SF Surf": "Sq ft (surface)", "SF Flr.": "Sq ft (floor)", "V.L.F.": "Vertical linear ft",
+      "C.L.F.": "100 linear ft", "Speaker": "Per speaker", "Total": "Each system", "Stall": "Per stall", "Court": "Per court",
+      "C.Y.": "Cubic yd", "M.S.F.": "1,000 sq ft", "Room": "Per room", "M.L.F.": "1,000 linear ft", "SF Shlf": "Sq ft (shelf)",
+      "Lb.": "Pound", "C.F.": "Cubic ft", "C": "Per 100", "SF Hor.": "Sq ft (horizontal)"
+    };
+    const unitLabel = u => UNIT_LABEL[u] || u;
+    const money2 = n => "$" + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // Site work is usually 15-year land improvements; everything else starts at 5. Always changeable.
+    const SITE = new Set(["Land Improvements", "Landscaping", "Fencing & Gates", "Site Lighting", "Parking Equipment"]);
+    const suggestLife = cat => SITE.has(cat) ? 15 : 5;
+
+    // item: { id, source: "rs" | "actual", csi, name, unit, unitCost, qty, total, basisId, life, category }
+    let takeoffs = [];
+    const form = { source: "rs", picked: null, life: null };
+
+    $("toCategory").innerHTML = `<option value="">Select…</option>` + CATEGORIES.map(c => `<option>${esc(c)}</option>`).join("");
+
+    // Source: RS Means estimate or actual cost
+    $("toSource").querySelectorAll("button").forEach(b => b.onclick = () => {
+      form.source = b.dataset.src;
+      $("toSource").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+      $("toRsFields").classList.toggle("hidden", form.source !== "rs");
+      $("toActualFields").classList.toggle("hidden", form.source !== "actual");
+      $("toQtyField").classList.toggle("hidden", form.source !== "rs");
+      updatePreview();
+      (form.source === "rs" ? $("toSearch") : $("toActName")).focus();
+    });
+
+    // Life buttons
+    function setLife(life) {
+      form.life = life;
+      $("toLife").querySelectorAll("button").forEach(x => x.classList.toggle("on", +x.dataset.life === life));
+      updatePreview();
+    }
+    $("toLife").querySelectorAll("button").forEach(b => b.onclick = () => setLife(+b.dataset.life));
+
+    // Search: every word must match the name, old name, CSI, category, or description
+    const toSearch = $("toSearch"), toResults = $("toResults");
+    let hits = [], hi = 0;
+    function search(q) {
+      const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!words.length) return [];
+      const scored = [];
+      for (const c of CATALOG) {
+        const name = c.name.toLowerCase();
+        const hay = `${name} ${c.oldName.toLowerCase()} ${c.csi} ${c.category.toLowerCase()} ${c.desc.toLowerCase()}`;
+        if (!words.every(w => hay.includes(w))) continue;
+        let score = 0;
+        words.forEach(w => { if (name.startsWith(w)) score += 4; else if (name.includes(w)) score += 2; if (c.csi.startsWith(w)) score += 3; });
+        scored.push([score, c]);
+      }
+      return scored.sort((a, b) => b[0] - a[0] || a[1].name.localeCompare(b[1].name)).slice(0, 40).map(x => x[1]);
+    }
+    function showResults() {
+      hits = search(toSearch.value); hi = 0;
+      if (!toSearch.value.trim()) { toResults.classList.add("hidden"); return; }
+      toResults.innerHTML = hits.length
+        ? hits.map((c, i) => `<div class="result ${i === hi ? "hi" : ""}" data-i="${i}">
+            <div class="rn">${esc(c.name)}</div>
+            <div class="rm"><span class="csi">${c.csi}</span> · ${esc(unitLabel(c.unit))} · ${money2(c.cost)} · ${esc(c.category)}</div></div>`).join("")
+        : `<div class="result"><div class="none">No matches. Try another word, or switch to Actual cost.</div></div>`;
+      toResults.classList.remove("hidden");
+    }
+    toSearch.addEventListener("input", showResults);
+    toSearch.addEventListener("focus", () => { if (toSearch.value.trim()) showResults(); });
+    toSearch.addEventListener("keydown", e => {
+      if (toResults.classList.contains("hidden") || !hits.length) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        hi = (hi + (e.key === "ArrowDown" ? 1 : -1) + hits.length) % hits.length;
+        toResults.querySelectorAll(".result").forEach((r, i) => r.classList.toggle("hi", i === hi));
+        toResults.querySelectorAll(".result")[hi].scrollIntoView({ block: "nearest" });
+      }
+      if (e.key === "Enter") { e.preventDefault(); pick(hits[hi]); }
+      if (e.key === "Escape") toResults.classList.add("hidden");
+    });
+    toResults.addEventListener("mousedown", e => {
+      const r = e.target.closest(".result[data-i]");
+      if (r) { e.preventDefault(); pick(hits[+r.dataset.i]); }
+    });
+    document.addEventListener("mousedown", e => { if (!e.target.closest(".search-wrap")) toResults.classList.add("hidden"); });
+
+    function pick(c) {
+      form.picked = c;
+      toResults.classList.add("hidden");
+      toSearch.value = "";
+      $("toPicked").innerHTML = `<div class="picked"><div>
+          <div class="pn">${esc(c.name)}</div>
+          <div class="pd"><span class="csi">CSI ${c.csi}</span> · Measured in <b>${esc(unitLabel(c.unit))}</b> · ${money2(c.cost)} per unit (RS Means O&amp;P)</div>
+          <div class="pd">${esc(c.desc)}</div></div>
+          <button title="Clear">×</button></div>`;
+      $("toPicked").querySelector("button").onclick = () => { form.picked = null; $("toPicked").innerHTML = ""; updatePreview(); toSearch.focus(); };
+      $("toQtyLabel").textContent = `Quantity (${unitLabel(c.unit)})`;
+      $("toCategory").value = c.category;
+      if (form.life === null) setLife(suggestLife(c.category));
+      updatePreview();
+      $("toQty").focus();
+    }
+
+    function formTotal() {
+      if (form.source === "rs") {
+        const q = num($("toQty").value);
+        return form.picked && q !== null ? q * form.picked.cost : null;
+      }
+      return num($("toActCost").value);
+    }
+    function updatePreview() {
+      const t = formTotal();
+      $("toPreview").innerHTML = t === null ? "" : `Line total <b>${money2(t)}</b>${form.life ? ` · ${form.life}-year` : ""}`;
+    }
+    ["toQty", "toActCost"].forEach(id => $(id).addEventListener("input", updatePreview));
+
+    $("toAdd").onclick = addItem;
+    ["toQty", "toActCost", "toActName"].forEach(id => $(id).addEventListener("keydown", e => { if (e.key === "Enter") addItem(); }));
+
+    function addItem() {
+      const rs = form.source === "rs";
+      const basisId = +$("toBasis").value || null;
+      const category = $("toCategory").value;
+      const qty = num($("toQty").value);
+      const actualName = $("toActName").value.trim();
+      const actualCost = num($("toActCost").value);
+
+      if (rs && !form.picked) { toast("Search and pick an RS Means item first."); return toSearch.focus(); }
+      if (rs && (qty === null || qty <= 0)) { toast("Enter a quantity."); return $("toQty").focus(); }
+      if (!rs && !actualName) { toast("Name the item."); return $("toActName").focus(); }
+      if (!rs && (actualCost === null || actualCost <= 0)) { toast("Enter the actual cost."); return $("toActCost").focus(); }
+      if (!basisId) { toast(bases.length ? "Pick the basis this comes out of." : "Add a basis on the Bases tab first."); return $("toBasis").focus(); }
+      if (!form.life) { toast("Pick a life: 5, 7 or 15 years."); return; }
+      if (!category) { toast("Pick a category."); return $("toCategory").focus(); }
+
+      takeoffs.push(rs
+        ? { id: nextId++, source: "rs", csi: form.picked.csi, name: form.picked.name, unit: form.picked.unit, unitCost: form.picked.cost, qty, total: qty * form.picked.cost, basisId, life: form.life, category }
+        : { id: nextId++, source: "actual", csi: "", name: actualName, unit: "", unitCost: null, qty: null, total: actualCost, basisId, life: form.life, category });
+
+      // Reset for the next item; keep the source and basis
+      form.picked = null; $("toPicked").innerHTML = ""; $("toQty").value = ""; $("toQtyLabel").textContent = "Quantity";
+      $("toActName").value = ""; $("toActCost").value = ""; $("toCategory").value = ""; setLife(null);
+      renderTakeoffs();
+      toast("Item added.");
+      (rs ? toSearch : $("toActName")).focus();
+    }
+
+    const basisName = id => bases.find(b => b.id === id)?.name || "(removed basis)";
+
+    function renderTakeoffs() {
+      // Basis dropdown follows the Bases tab
+      const sel = $("toBasis"), keep = sel.value;
+      sel.innerHTML = bases.length
+        ? (bases.length > 1 ? `<option value="">Select…</option>` : "") + bases.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join("")
+        : `<option value="">No bases yet. Add one on the Bases tab</option>`;
+      if ([...sel.options].some(o => o.value === keep)) sel.value = keep;
+
+      const lives = [5, 7, 15];
+      const sum = list => list.reduce((s, t) => s + t.total, 0);
+      const grand = sum(takeoffs);
+
+      // By basis
+      const basisIds = [...new Set([...bases.map(b => b.id), ...takeoffs.map(t => t.basisId)])].filter(id => takeoffs.some(t => t.basisId === id));
+      $("tallyBasis").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Basis</th>${lives.map(l => `<th class="n">${l}-yr</th>`).join("")}<th class="n">Total</th><th class="n">% of basis</th></tr></thead><tbody>
+        ${basisIds.map(id => {
+          const items = takeoffs.filter(t => t.basisId === id);
+          const b = bases.find(x => x.id === id);
+          const dep = b ? (b.kind === KINDS[0] ? depreciable(b) : num(b.amount)) : null;
+          const tot = sum(items);
+          return `<tr><td>${esc(basisName(id))}</td>${lives.map(l => `<td class="n">${money(sum(items.filter(t => t.life === l)) || null)}</td>`).join("")}
+                  <td class="n"><b>${money(tot)}</b></td><td class="n">${dep ? (tot / dep * 100).toFixed(1) + "%" : "—"}</td></tr>`;
+        }).join("")}
+        <tr class="total"><td>Total</td>${lives.map(l => `<td class="n">${money(sum(takeoffs.filter(t => t.life === l)) || null)}</td>`).join("")}<td class="n">${money(grand)}</td><td></td></tr>
+        </tbody></table>` : `<div class="none" style="color:#9ca3af;font-size:13px">Totals show here once items are added.</div>`;
+
+      // By life
+      $("tallyLife").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Life</th><th class="n">Items</th><th class="n">Total</th><th class="n">Share</th></tr></thead><tbody>
+        ${lives.map(l => { const it = takeoffs.filter(t => t.life === l); const v = sum(it);
+          return `<tr><td>${l}-year</td><td class="n">${it.length}</td><td class="n">${money(v || null)}</td><td class="n">${grand ? (v / grand * 100).toFixed(1) + "%" : "—"}</td></tr>`; }).join("")}
+        <tr class="total"><td>Total</td><td class="n">${takeoffs.length}</td><td class="n">${money(grand)}</td><td></td></tr></tbody></table>` : "";
+
+      // By category
+      const cats = [...new Set(takeoffs.map(t => t.category))].sort((a, b) => sum(takeoffs.filter(t => t.category === b)) - sum(takeoffs.filter(t => t.category === a)));
+      $("tallyCategory").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Category</th><th class="n">Items</th>${lives.map(l => `<th class="n">${l}-yr</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>
+        ${cats.map(c => { const it = takeoffs.filter(t => t.category === c);
+          return `<tr><td>${esc(c)}</td><td class="n">${it.length}</td>${lives.map(l => `<td class="n">${money(sum(it.filter(t => t.life === l)) || null)}</td>`).join("")}<td class="n"><b>${money(sum(it))}</b></td></tr>`; }).join("")}
+        <tr class="total"><td>Total</td><td class="n">${takeoffs.length}</td>${lives.map(l => `<td class="n">${money(sum(takeoffs.filter(t => t.life === l)) || null)}</td>`).join("")}<td class="n">${money(grand)}</td></tr></tbody></table>`
+        : `<div style="color:#9ca3af;font-size:13px">Nothing added yet.</div>`;
+
+      // Line items, grouped by basis
+      $("toItems").innerHTML = takeoffs.length ? `<table class="t"><thead><tr><th>Item</th><th>Source</th><th>Category</th><th>Life</th><th class="n">Qty</th><th class="n">Unit cost</th><th class="n">Total</th><th></th></tr></thead><tbody>
+        ${basisIds.map(id => `<tr class="group-row"><td colspan="8">${esc(basisName(id))}</td></tr>` + takeoffs.filter(t => t.basisId === id).map(t => `
+          <tr data-id="${t.id}">
+            <td>${esc(t.name)}${t.csi ? `<br><span class="csi">CSI ${t.csi}</span>` : ""}</td>
+            <td><span class="src-tag ${t.source === "actual" ? "actual" : ""}">${t.source === "actual" ? "Actual cost" : "RS Means"}</span></td>
+            <td>${esc(t.category)}</td>
+            <td><select data-life>${lives.map(l => `<option value="${l}" ${t.life === l ? "selected" : ""}>${l} yr</option>`).join("")}</select></td>
+            <td class="n">${t.qty !== null ? `${t.qty.toLocaleString()} <span class="csi">${esc(unitLabel(t.unit))}</span>` : "—"}</td>
+            <td class="n">${t.unitCost !== null ? money2(t.unitCost) : "—"}</td>
+            <td class="n"><b>${money2(t.total)}</b></td>
+            <td><button class="x" title="Remove">×</button></td>
+          </tr>`).join("")).join("")}
+        </tbody></table>` : `<div style="color:#9ca3af;font-size:13px">Nothing added yet.</div>`;
+
+      $("toItems").querySelectorAll("tr[data-id]").forEach(tr => {
+        const t = takeoffs.find(x => x.id === +tr.dataset.id);
+        tr.querySelector("[data-life]").onchange = e => { t.life = +e.target.value; renderTakeoffs(); };
+        tr.querySelector(".x").onclick = () => { takeoffs = takeoffs.filter(x => x !== t); renderTakeoffs(); };
+      });
+    }
 
     renderBases();
     show(0);
