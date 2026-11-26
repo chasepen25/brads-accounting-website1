@@ -80,6 +80,8 @@
       background: #ffffff10; border: 1px solid #ffffff22; border-radius: 7px; padding: 6px 11px;
     }
     .theme-btn:hover { background: #ffffff1c; color: #fff; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .user-name { font-size: 13px; color: #c9d2de; margin-right: 6px; }
 
     /* Study summary bar: one slim line */
     .content { min-width: 0; }
@@ -320,6 +322,71 @@
     .src-tag { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--tint); color: var(--ink2); white-space: nowrap; }
     .src-tag.actual { background: var(--warn-bg); color: var(--warn); }
     .group-row td { background: var(--tint2); font-weight: 700; color: var(--navy); }
+
+    /* Exterior */
+    .ex-wrap { display: grid; grid-template-columns: 290px 1fr; gap: 16px; margin-top: 16px; align-items: start; }
+    .ex-panel { position: sticky; top: 46px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px; max-height: calc(100vh - 60px); overflow-y: auto; }
+    .ex-panel h4 { margin: 14px 0 8px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+    .ex-panel h4:first-child { margin-top: 0; }
+    .tools { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+    .tool {
+      border: 1px solid var(--line2); background: var(--paper); color: var(--ink2); border-radius: 7px; cursor: pointer;
+      font: inherit; font-size: 11px; padding: 7px 2px 6px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    }
+    .tool .ic { font-size: 16px; line-height: 1; }
+    .tool kbd { font-size: 9px; opacity: .6; font-family: inherit; }
+    .tool.on { background: var(--solid); border-color: var(--solid); color: #fff; }
+    .tool:disabled { opacity: .35; cursor: not-allowed; }
+    .ex-item {
+      display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; cursor: pointer;
+      border: 1px solid transparent; margin-bottom: 3px;
+    }
+    .ex-item:hover { background: var(--tint2); }
+    .ex-item.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--paper)); }
+    .ex-item .sw { width: 12px; height: 12px; border-radius: 3px; background: var(--c); flex-shrink: 0; }
+    .ex-item .nm { flex: 1; min-width: 0; font-size: 13px; line-height: 1.25; }
+    .ex-item .nm small { display: block; color: var(--muted); font-size: 11px; }
+    .ex-item .key { font-size: 10px; color: var(--muted); border: 1px solid var(--line2); border-radius: 4px; padding: 0 5px; }
+    .ex-empty { font-size: 12px; color: var(--muted); padding: 4px 2px 8px; }
+    .ex-add { margin-top: 6px; }
+    .ex-add input, .ex-add select { width: 100%; font: inherit; font-size: 13px; color: var(--ink); background: var(--paper); border: 1px solid var(--line2); border-radius: 6px; padding: 7px 9px; }
+    .ex-add .results { position: static; margin-top: 4px; max-height: 260px; box-shadow: none; }
+    .ex-add .result { padding: 6px 9px; }
+    .ex-add .result .rn { font-size: 13px; }
+    .ex-add .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+    .linkbtn { border: 0; background: none; color: var(--accent); font: inherit; font-size: 12px; cursor: pointer; padding: 4px 0; }
+    .ex-viewer { min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .ex-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .ex-bar .sep { width: 1px; height: 20px; background: var(--line); }
+    .ex-bar button.small { font: inherit; font-size: 12px; border: 1px solid var(--line2); background: var(--paper); color: var(--ink); border-radius: 6px; padding: 4px 9px; cursor: pointer; }
+    .ex-bar .scale-ok { color: var(--good); font-weight: 600; }
+    .ex-bar .scale-no { color: #e5484d; font-weight: 600; }
+    .ex-hint { margin-left: auto; color: var(--muted); font-size: 12px; }
+    .ex-stage { position: relative; overflow: auto; max-height: calc(100vh - 150px); background: #6b7280; }
+    .ex-page { position: relative; margin: 0 auto; background: #fff; }
+    .ex-page canvas { display: block; }
+    .ex-page svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .ex-page svg.drawing { cursor: crosshair; }
+    .ex-pop {
+      position: absolute; z-index: 30; width: 270px; background: var(--paper); color: var(--ink); border: 2px solid var(--solid);
+      border-radius: 9px; padding: 12px; box-shadow: 0 10px 30px #0006; font-size: 13px;
+    }
+    .ex-pop .t { font-weight: 700; margin-bottom: 8px; }
+    .ex-pop .presets { display: flex; gap: 6px; margin-bottom: 8px; }
+    .ex-pop .presets button, .ex-pop .btns button { font: inherit; font-size: 13px; border: 1px solid var(--line2); background: var(--paper); color: var(--ink); border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+    .ex-pop .presets button { flex: 1; font-weight: 600; }
+    .ex-pop input { width: 100%; font: inherit; font-size: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--line2); border-radius: 6px; padding: 6px 8px; }
+    .ex-pop .or { font-size: 11px; color: var(--muted); margin: 6px 0 4px; }
+    .ex-pop .inl { display: flex; align-items: center; gap: 6px; }
+    .ex-pop .inl input { width: 80px; }
+    .ex-pop label.check { font-size: 12px; margin-top: 8px; }
+    .ex-pop .btns { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
+    .ex-pop .btns .save { background: var(--solid); border-color: var(--solid); color: #fff; }
+    table.t tr.meas td { font-size: 12px; color: var(--muted); padding-top: 3px; padding-bottom: 3px; }
+    table.t tr.meas td:first-child { padding-left: 30px; }
+    table.t select.mini { font-size: 12px; }
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 7px; vertical-align: 0; }
+    @media (max-width: 980px) { .ex-wrap { grid-template-columns: 1fr; } .ex-panel { position: static; max-height: none; } }
     table.tree td { border-bottom: 1px solid var(--tint3); }
     table.tree tr.lvl-basis td { background: var(--solid); color: #fff; font-weight: 700; font-size: 14px; padding: 9px 10px; }
     table.tree tr.lvl-basis td .muted { color: #b9c7d8; font-weight: 400; font-size: 12px; }
@@ -338,7 +405,11 @@
         <div class="brand-mark">CS</div>
         <div class="brand-name">Cost Seg Professional<small>COST SEGREGATION STUDIES</small></div>
       </div>
-      <button class="theme-btn" id="themeBtn"></button>
+      <div class="top-actions">
+        <span class="user-name hidden" id="userName"></span>
+        <button class="theme-btn" id="themeBtn"></button>
+        <button class="theme-btn hidden" id="signOut">Sign out</button>
+      </div>
     </div>
     <nav id="tabs"></nav>
   </header>
@@ -457,6 +528,62 @@
     </div>
   </template>
 
+  <!-- ===================== EXTERIOR ===================== -->
+  <template id="exterior-panel">
+    <label class="dropzone" id="exDrop">
+      <input type="file" id="exFile" accept="application/pdf" multiple hidden>
+      <b>Drag and drop a site plan PDF here</b> or click to browse
+      <small>Then set the scale from the plan's scale bar and start measuring</small>
+    </label>
+    <div class="docs" id="exDocList"></div>
+
+    <div class="ex-wrap hidden" id="exWrap">
+      <aside class="ex-panel">
+        <h4>Tools</h4>
+        <div class="tools" id="exTools">
+          <button class="tool" data-tool="area" title="Area: click the corners, then click the first point or press Enter to close"><span class="ic">▱</span>Area<kbd>A</kbd></button>
+          <button class="tool" data-tool="linear" title="Linear: click along the line, double-click or Enter to finish"><span class="ic">⟋</span>Linear<kbd>L</kbd></button>
+          <button class="tool" data-tool="count" title="Count: click each one"><span class="ic">●</span>Count<kbd>C</kbd></button>
+          <button class="tool" data-tool="wall" title="Wall: trace the wall's length, then enter its height (sq ft = length × height)"><span class="ic">▥</span>Wall<kbd>W</kbd></button>
+          <button class="tool" data-tool="scale" title="Scale: click both ends of the plan's scale bar"><span class="ic">⇹</span>Scale<kbd>S</kbd></button>
+        </div>
+
+        <h4>Items <span style="text-transform:none;letter-spacing:0">· press 1–9 to switch</span></h4>
+        <div id="exItems"></div>
+
+        <div class="ex-add">
+          <input id="exSearch" placeholder="＋ Add item: search asphalt, curb, light pole…" autocomplete="off">
+          <div class="results hidden" id="exResults"></div>
+          <button class="linkbtn" id="exCustomBtn" type="button">or add a custom item</button>
+          <div id="exCustom" class="hidden">
+            <input id="exCName" placeholder="Item name">
+            <div class="row2">
+              <select id="exCTool"><option value="area">Area (sq ft)</option><option value="linear">Linear (ft)</option><option value="count">Count (each)</option><option value="wall">Wall (sq ft)</option></select>
+              <input id="exCCost" class="money" inputmode="decimal" placeholder="$ per unit">
+            </div>
+            <div class="row2"><button class="btn" type="button" id="exCCancel">Cancel</button><button class="btn primary" type="button" id="exCAdd">Add</button></div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="ex-viewer">
+        <div class="ex-bar">
+          <button class="small" id="exPrev">◀</button><span id="exPageLbl"></span><button class="small" id="exNext">▶</button>
+          <span class="sep"></span>
+          <span id="exScaleLbl"></span>
+          <span class="sep"></span>
+          <button class="small" id="exZoomOut">−</button><span id="exZoomLbl">100%</span><button class="small" id="exZoomIn">＋</button><button class="small" id="exFit">Fit</button>
+          <span class="ex-hint" id="exHint"></span>
+        </div>
+        <div class="ex-stage" id="exStage"></div>
+      </div>
+    </div>
+
+    <div class="section"><h3>Measurements</h3><div id="exTally"></div>
+      <div class="note">Measured items are added to <b>Takeoffs</b> as 15-year property, under the basis you pick here. Change the life on either tab.</div>
+    </div>
+  </template>
+
   <!-- ===================== TAKEOFFS ===================== -->
   <template id="takeoffs-panel">
     <div class="section">
@@ -509,7 +636,7 @@
       ["Overview", "Property summary and study details."],
       ["Bases", "Each basis being studied: the purchase, improvements, and any others. Fills in from Workpapers."],
       ["Takeoffs", "Line items reclassified out of each basis, estimated from RS Means or from actual costs."],
-      ["Exterior", "Site work and land improvements."],
+      ["Exterior", "Measure site work on the plan: areas, lengths, counts, and walls. Results flow into Takeoffs as 15-year property."],
       ["Electrical", "Electrical systems and dedicated circuits."],
       ["Depr Adj", "Depreciation adjustments and catch-up."],
       ["Unit Cost Detail", "Unit costs with location adjustments."],
@@ -521,7 +648,7 @@
     // ---------- Tabs ----------
     const nav = document.getElementById("tabs");
     const main = document.getElementById("panels");
-    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form", "Bases": "bases-panel", "Takeoffs": "takeoffs-panel" };
+    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form", "Bases": "bases-panel", "Takeoffs": "takeoffs-panel", "Exterior": "exterior-panel" };
 
     tabs.forEach(([name, desc], i) => {
       const btn = document.createElement("button");
@@ -1464,22 +1591,557 @@
         ${basisIds.map(id => `<tr class="group-row"><td colspan="8">${esc(basisName(id))}</td></tr>` + takeoffs.filter(t => t.basisId === id).map(t => `
           <tr data-id="${t.id}">
             <td>${esc(t.name)}${t.csi ? `<br><span class="csi">CSI ${t.csi}</span>` : ""}</td>
-            <td><span class="src-tag ${t.source === "actual" ? "actual" : ""}">${t.source === "actual" ? "Actual cost" : "RS Means"}</span></td>
+            <td><span class="src-tag ${t.source === "actual" ? "actual" : ""}">${t.source === "actual" ? "Actual cost" : t.source === "exterior" ? "Exterior" : "RS Means"}</span></td>
             <td>${esc(t.category)}</td>
             <td><select data-life>${lives.map(l => `<option value="${l}" ${t.life === l ? "selected" : ""}>${l} yr</option>`).join("")}</select></td>
-            <td class="n">${t.qty !== null ? `${t.qty.toLocaleString()} <span class="csi">${esc(unitLabel(t.unit))}</span>` : "—"}</td>
+            <td class="n">${t.qty !== null ? `${(+t.qty.toFixed(2)).toLocaleString()} <span class="csi">${esc(unitLabel(t.unit))}</span>` : "—"}</td>
             <td class="n">${t.unitCost !== null ? money2(t.unitCost) : "—"}</td>
             <td class="n"><b>${money2(t.total)}</b></td>
-            <td><button class="x" title="Remove">×</button></td>
+            <td>${t.source === "exterior" ? `<span class="csi" title="Edit on the Exterior tab">↗</span>` : `<button class="x" title="Remove">×</button>`}</td>
           </tr>`).join("")).join("")}
         </tbody></table>` : `<div style="color:#9ca3af;font-size:13px">Nothing added yet.</div>`;
 
       $("toItems").querySelectorAll("tr[data-id]").forEach(tr => {
-        const t = takeoffs.find(x => x.id === +tr.dataset.id);
-        tr.querySelector("[data-life]").onchange = e => { t.life = +e.target.value; renderTakeoffs(); };
-        tr.querySelector(".x").onclick = () => { takeoffs = takeoffs.filter(x => x !== t); renderTakeoffs(); };
+        const t = takeoffs.find(x => String(x.id) === tr.dataset.id);
+        tr.querySelector("[data-life]").onchange = e => {
+          t.life = +e.target.value;
+          if (t.source === "exterior") { const it = exItems.find(i => i.id === t.extItemId); if (it) it.life = t.life; renderExTally(); }
+          renderTakeoffs();
+        };
+        const x = tr.querySelector(".x");
+        if (x) x.onclick = () => { takeoffs = takeoffs.filter(y => y !== t); renderTakeoffs(); };
       });
     }
+
+
+    // ---------- Exterior: measure the site plan ----------
+    // Geometry is stored in PDF page units (72 per inch), so zooming never changes a measurement.
+    const AREA_UNITS = { "S.F.": 1, "SF Surf": 1, "SF Hor.": 1, "SF Flr.": 1, "S.Y.": 1 / 9, "M.S.F.": 1 / 1000 };
+    const LINEAR_UNITS = { "L.F.": 1, "V.L.F.": 1, "C.L.F.": 1 / 100, "M.L.F.": 1 / 1000 };
+    const COUNT_UNITS = { "Ea.": 1, "Opng.": 1, "Pair": 1, "Stall": 1, "Total": 1, "Speaker": 1, "Court": 1, "Room": 1 };
+    const TOOL_LABEL = { area: "Area", linear: "Linear", count: "Count", wall: "Wall" };
+    const EX_COLORS = ["#e5484d", "#3b82f6", "#22c55e", "#f59e0b", "#a855f7", "#14b8a6", "#ec4899", "#84cc16", "#f97316", "#06b6d4", "#8b5cf6", "#eab308"];
+    const toolsFor = unit => AREA_UNITS[unit] !== undefined ? ["area", "wall"] : LINEAR_UNITS[unit] !== undefined ? ["linear"] : COUNT_UNITS[unit] !== undefined ? ["count"] : [];
+    const customUnit = tool => tool === "linear" ? "L.F." : tool === "count" ? "Ea." : "S.F.";
+
+    const exDocs = [];      // { id, name, pdf, numPages, page, upf: {page: page-units per foot} }
+    let exItems = [];       // { id, name, csi, unit, unitCost, category, tool, color, life, basisId, custom, lastHeight }
+    let exMeas = [];        // { id, itemId, docId, page, kind, pts: [[x,y]...], height }
+    let exDoc = null, exZoom = 1, exTool = null, exItemId = null;
+    let draw = null;        // in-progress shape: { pts: [[x,y]...] }
+    let exView = null;      // { page, vp1, scale, svg }
+    let mouse = null;
+
+    // Upload
+    const exDrop = $("exDrop"), exFile = $("exFile");
+    exFile.addEventListener("change", () => { exAddFiles(exFile.files); exFile.value = ""; });
+    ["dragenter", "dragover"].forEach(ev => exDrop.addEventListener(ev, e => { e.preventDefault(); exDrop.classList.add("over"); }));
+    ["dragleave", "drop"].forEach(ev => exDrop.addEventListener(ev, e => { e.preventDefault(); exDrop.classList.remove("over"); }));
+    exDrop.addEventListener("drop", e => exAddFiles(e.dataTransfer.files));
+
+    async function exAddFiles(list) {
+      if (!window.pdfjsLib) { toast("PDF viewer didn't load. Refresh and try again."); return; }
+      const pdfs = [...list].filter(f => f.type === "application/pdf" || /\.pdf$/i.test(f.name));
+      if (!pdfs.length) { toast("Only PDF files can be uploaded."); return; }
+      for (const f of pdfs) {
+        try {
+          const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(await f.arrayBuffer()) }).promise;
+          const d = { id: nextId++, name: f.name, pdf, numPages: pdf.numPages, page: 1, upf: {} };
+          exDocs.push(d); exDoc = d;
+        } catch (e) { console.error(e); toast(`Couldn't open ${f.name}.`); }
+      }
+      exZoom = 1;
+      exRenderDocs(); exRenderPage();
+      if (!exScale()) setExTool("scale");
+    }
+
+    function exRenderDocs() {
+      $("exWrap").classList.toggle("hidden", !exDocs.length);
+      $("exDocList").innerHTML = exDocs.map(d => {
+        const n = exMeas.filter(m => m.docId === d.id).length;
+        return `<span class="doc-pill ${d === exDoc ? "active" : ""}" data-id="${d.id}">
+          <button class="open">📐 ${esc(d.name)}<span>${d.numPages} pg${n ? ` · ${n} measured` : ""}</span></button>
+          <button class="del" title="Delete this plan">×</button></span>`;
+      }).join("");
+      $("exDocList").querySelectorAll(".doc-pill").forEach(p => {
+        const d = exDocs.find(x => x.id === +p.dataset.id);
+        p.querySelector(".open").onclick = () => { exDoc = d; exZoom = 1; cancelDraw(); exRenderDocs(); exRenderPage(); };
+        p.querySelector(".del").onclick = () => {
+          const n = exMeas.filter(m => m.docId === d.id).length;
+          if (!confirm(n ? `Delete "${d.name}"? Its ${n} measurement${n > 1 ? "s" : ""} will be removed too.` : `Delete "${d.name}"?`)) return;
+          exMeas = exMeas.filter(m => m.docId !== d.id);
+          exDocs.splice(exDocs.indexOf(d), 1); d.pdf.destroy();
+          if (exDoc === d) exDoc = exDocs[exDocs.length - 1] || null;
+          cancelDraw(); exRenderDocs(); exRenderPage(); exChanged();
+        };
+      });
+    }
+
+    const exScale = () => exDoc && exDoc.upf[exDoc.page];   // page units per foot
+
+    let exRenderToken = 0;
+    async function exRenderPage() {
+      const stage = $("exStage");
+      const token = ++exRenderToken;
+      if (!exDoc) { stage.innerHTML = ""; exView = null; return; }
+      const page = await exDoc.pdf.getPage(exDoc.page);
+      if (token !== exRenderToken) return;
+      const vp1 = page.getViewport({ scale: 1 });
+      const fit = Math.max(200, stage.clientWidth - 24) / vp1.width;
+      const scale = fit * exZoom;
+      const vp = page.getViewport({ scale });
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const wrap = document.createElement("div");
+      wrap.className = "ex-page";
+      wrap.style.width = vp.width + "px"; wrap.style.height = vp.height + "px";
+      wrap.style.margin = "12px auto";
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(vp.width * ratio); canvas.height = Math.floor(vp.height * ratio);
+      canvas.style.width = vp.width + "px"; canvas.style.height = vp.height + "px";
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", `0 0 ${vp1.width} ${vp1.height}`);
+      wrap.append(canvas, svg);
+      stage.innerHTML = ""; stage.appendChild(wrap);
+      const ctx = canvas.getContext("2d"); ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      exView = { page, vp1, scale, svg, wrap };
+      wireExSvg(svg);
+      exDrawShapes();
+      exUpdateBar();
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    }
+
+    function exUpdateBar() {
+      if (!exDoc) return;
+      $("exPageLbl").textContent = `Page ${exDoc.page} of ${exDoc.numPages}`;
+      $("exPrev").disabled = exDoc.page <= 1; $("exNext").disabled = exDoc.page >= exDoc.numPages;
+      const upf = exScale();
+      $("exScaleLbl").innerHTML = upf ? `Scale <span class="scale-ok">1" = ${+(72 / upf).toFixed(2)} ft</span>` : `<span class="scale-no">Scale not set</span> · press S`;
+      $("exZoomLbl").textContent = Math.round(exZoom * 100) + "%";
+      const it = exItems.find(i => i.id === exItemId);
+      $("exHint").textContent =
+        exTool === "scale" ? "Click both ends of the scale bar" :
+        !it ? "Pick or add an item to start measuring" :
+        exTool === "area" ? "Click corners · click the first point or Enter to close" :
+        exTool === "linear" ? "Click along the line · double-click or Enter to finish" :
+        exTool === "wall" ? "Trace the wall · Enter to finish, then type its height" :
+        exTool === "count" ? "Click each one · right-click a mark to remove it" : "";
+    }
+
+    $("exPrev").onclick = () => { if (exDoc.page > 1) { exDoc.page--; cancelDraw(); exRenderPage(); } };
+    $("exNext").onclick = () => { if (exDoc.page < exDoc.numPages) { exDoc.page++; cancelDraw(); exRenderPage(); } };
+    const setZoom = z => { exZoom = Math.min(6, Math.max(0.25, z)); exRenderPage(); };
+    $("exZoomIn").onclick = () => setZoom(exZoom * 1.25);
+    $("exZoomOut").onclick = () => setZoom(exZoom / 1.25);
+    $("exFit").onclick = () => setZoom(1);
+
+    // Tools and items
+    $("exTools").querySelectorAll(".tool").forEach(b => b.onclick = () => setExTool(b.dataset.tool));
+    function setExTool(tool) {
+      cancelDraw();
+      const it = exItems.find(i => i.id === exItemId);
+      if (tool !== "scale" && it) {
+        const ok = it.custom ? true : toolsFor(it.unit).includes(tool);
+        if (!ok) { toast(`${it.name} is priced per ${unitLabel(it.unit).toLowerCase()}, so it can't use ${TOOL_LABEL[tool]}.`); return; }
+        it.tool = tool;
+      }
+      exTool = tool;
+      exRenderItems(); exUpdateBar(); exDrawShapes();
+    }
+    function setExItem(id) {
+      cancelDraw();
+      exItemId = id;
+      const it = exItems.find(i => i.id === id);
+      exTool = it ? it.tool : null;
+      exRenderItems(); exUpdateBar(); exDrawShapes();
+    }
+
+    function exRenderItems() {
+      const it = exItems.find(i => i.id === exItemId);
+      $("exTools").querySelectorAll(".tool").forEach(b => {
+        const t = b.dataset.tool;
+        b.classList.toggle("on", exTool === t);
+        b.disabled = t !== "scale" && !!it && !it.custom && !toolsFor(it.unit).includes(t);
+      });
+      $("exItems").innerHTML = exItems.length ? exItems.map((i, n) => {
+        const q = exItemQty(i);
+        return `<div class="ex-item ${i.id === exItemId ? "on" : ""}" data-id="${i.id}" style="--c:${i.color}">
+          <span class="sw"></span>
+          <span class="nm">${esc(i.name)}<small>${TOOL_LABEL[i.tool]} · ${q.label}</small></span>
+          ${n < 9 ? `<span class="key">${n + 1}</span>` : ""}</div>`;
+      }).join("") : `<div class="ex-empty">No items yet. Search below to add asphalt, curbs, light poles, and so on.</div>`;
+      $("exItems").querySelectorAll(".ex-item").forEach(el => el.onclick = () => setExItem(el.dataset.id === String(exItemId) ? null : +el.dataset.id));
+    }
+
+    // Add an item: search the RS Means items that can be measured on a plan
+    const exSearch = $("exSearch"), exResults = $("exResults");
+    let exHits = [], exHi = 0;
+    const SITE_CATS = new Set(["Land Improvements", "Landscaping", "Fencing & Gates", "Site Lighting", "Parking Equipment", "Recreation & Pools", "Signs, Awnings & Canopies"]);
+    function exFind(q) {
+      const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!words.length) return [];
+      return CATALOG.filter(c => toolsFor(c.unit).length)
+        .map(c => {
+          const hay = `${c.name} ${c.oldName} ${c.csi} ${c.category} ${c.desc}`.toLowerCase();
+          if (!words.every(w => hay.includes(w))) return null;
+          let sc = SITE_CATS.has(c.category) ? 3 : 0;
+          words.forEach(w => { if (c.name.toLowerCase().startsWith(w)) sc += 4; else if (c.name.toLowerCase().includes(w)) sc += 2; });
+          return [sc, c];
+        }).filter(Boolean).sort((a, b) => b[0] - a[0] || a[1].name.localeCompare(b[1].name)).slice(0, 30).map(x => x[1]);
+    }
+    function exShowResults() {
+      exHits = exFind(exSearch.value); exHi = 0;
+      if (!exSearch.value.trim()) { exResults.classList.add("hidden"); return; }
+      exResults.innerHTML = exHits.length ? exHits.map((c, i) => `<div class="result ${i === 0 ? "hi" : ""}" data-i="${i}"><div class="rn">${esc(c.name)}</div>
+        <div class="rm"><span class="csi">${c.csi}</span> · ${esc(unitLabel(c.unit))} · ${money2(c.cost)}</div></div>`).join("")
+        : `<div class="result"><div class="none">No measurable matches. Try another word or add a custom item.</div></div>`;
+      exResults.classList.remove("hidden");
+    }
+    exSearch.addEventListener("input", exShowResults);
+    exSearch.addEventListener("keydown", e => {
+      if (e.key === "Escape") { exResults.classList.add("hidden"); exSearch.blur(); return; }
+      if (!exHits.length) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault(); exHi = (exHi + (e.key === "ArrowDown" ? 1 : -1) + exHits.length) % exHits.length;
+        exResults.querySelectorAll(".result").forEach((r, i) => r.classList.toggle("hi", i === exHi));
+      }
+      if (e.key === "Enter") { e.preventDefault(); exAddItem(exHits[exHi]); }
+    });
+    exResults.addEventListener("mousedown", e => { const r = e.target.closest(".result[data-i]"); if (r) { e.preventDefault(); exAddItem(exHits[+r.dataset.i]); } });
+
+    function defaultBasisId() {
+      const acq = bases.find(b => b.kind === KINDS[0]);
+      return (acq || bases[0] || {}).id || null;
+    }
+    function exAddItem(c) {
+      const tools = toolsFor(c.unit);
+      const wallish = /wall|retaining|enclosure|gabion/i.test(c.name) && tools.includes("wall");
+      const it = { id: nextId++, name: c.name, csi: c.csi, unit: c.unit, unitCost: c.cost, category: c.category,
+                   tool: wallish ? "wall" : tools[0], color: EX_COLORS[exItems.length % EX_COLORS.length],
+                   life: 15, basisId: defaultBasisId(), custom: false, lastHeight: null };
+      exItems.push(it);
+      exSearch.value = ""; exResults.classList.add("hidden"); exSearch.blur();
+      setExItem(it.id); exChanged();
+    }
+    $("exCustomBtn").onclick = () => { $("exCustom").classList.remove("hidden"); $("exCustomBtn").classList.add("hidden"); $("exCName").focus(); };
+    $("exCCancel").onclick = () => { $("exCustom").classList.add("hidden"); $("exCustomBtn").classList.remove("hidden"); };
+    $("exCAdd").onclick = () => {
+      const name = $("exCName").value.trim(), cost = num($("exCCost").value), tool = $("exCTool").value;
+      if (!name) { toast("Name the item."); return $("exCName").focus(); }
+      if (cost === null || cost <= 0) { toast("Enter the cost per unit."); return $("exCCost").focus(); }
+      const it = { id: nextId++, name, csi: "", unit: customUnit(tool), unitCost: cost, category: "Land Improvements",
+                   tool, color: EX_COLORS[exItems.length % EX_COLORS.length], life: 15, basisId: defaultBasisId(), custom: true, lastHeight: null };
+      exItems.push(it);
+      $("exCName").value = ""; $("exCCost").value = ""; $("exCCancel").onclick();
+      setExItem(it.id); exChanged();
+    };
+
+    // Geometry
+    const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+    const pathLen = pts => pts.slice(1).reduce((s, p, i) => s + dist(pts[i], p), 0);
+    const polyArea = pts => Math.abs(pts.reduce((s, p, i) => { const q = pts[(i + 1) % pts.length]; return s + p[0] * q[1] - q[0] * p[1]; }, 0)) / 2;
+    const fmt = (n, d = 0) => Number(n).toLocaleString(undefined, { maximumFractionDigits: d, minimumFractionDigits: 0 });
+
+    // A measurement's size in feet / square feet / count (null if its page has no scale)
+    function measSize(m) {
+      if (m.kind === "count") return m.pts.length;
+      const d = exDocs.find(x => x.id === m.docId);
+      const upf = d && d.upf[m.page];
+      if (!upf) return null;
+      if (m.kind === "area") return polyArea(m.pts) / (upf * upf);
+      const ft = pathLen(m.pts) / upf;
+      return m.kind === "wall" ? ft * (m.height || 0) : ft;
+    }
+    // Total for an item, in its measuring unit and in its pricing unit
+    function exItemQty(it) {
+      const ms = exMeas.filter(m => m.itemId === it.id);
+      let base = 0, missing = 0;
+      ms.forEach(m => { const v = measSize(m); if (v === null) missing++; else base += v; });
+      const kind = it.tool === "count" ? "count" : it.tool === "linear" ? "linear" : "area";
+      const conv = kind === "count" ? (COUNT_UNITS[it.unit] ?? 1) : kind === "linear" ? (LINEAR_UNITS[it.unit] ?? 1) : (AREA_UNITS[it.unit] ?? 1);
+      const label = kind === "count" ? `${fmt(base)} ea` : kind === "linear" ? `${fmt(base)} LF` : `${fmt(base)} SF`;
+      return { base, qty: base * conv, label: label + (missing ? ` (+${missing} unscaled)` : ""), count: ms.length, missing };
+    }
+
+    // Drawing on the plan
+    function toPage(e) {
+      const r = exView.svg.getBoundingClientRect();
+      return [(e.clientX - r.left) / r.width * exView.vp1.width, (e.clientY - r.top) / r.height * exView.vp1.height];
+    }
+    const screenPx = units => units * exView.scale;      // page units -> screen pixels
+    function constrain(p, e) {
+      if (!e.shiftKey || !draw || !draw.pts.length) return p;
+      const last = draw.pts[draw.pts.length - 1];
+      return Math.abs(p[0] - last[0]) > Math.abs(p[1] - last[1]) ? [p[0], last[1]] : [last[0], p[1]];
+    }
+
+    function wireExSvg(svg) {
+      svg.classList.toggle("drawing", !!exTool);
+      svg.addEventListener("mousemove", e => { if (!draw) return; mouse = constrain(toPage(e), e); exDrawShapes(); });
+      svg.addEventListener("mouseleave", () => { mouse = null; if (draw) exDrawShapes(); });
+      svg.addEventListener("click", e => {
+        if (e.target.closest(".ex-pop") || document.querySelector(".ex-pop")) return;
+        if (!exTool) { toast("Pick an item (or press S to set the scale) first."); return; }
+        const p = constrain(toPage(e), e);
+        if (exTool === "scale") {
+          draw = draw || { pts: [] };
+          draw.pts.push(p);
+          if (draw.pts.length === 2) askScale(draw.pts);
+          exDrawShapes(); return;
+        }
+        if (!exItemId) { toast("Pick or add an item first."); return; }
+        if (!exScale() && exTool !== "count") { toast("Set the scale first: press S and click both ends of the scale bar."); setExTool("scale"); return; }
+        if (exTool === "count") { addCount(p); return; }
+        draw = draw || { pts: [] };
+        // Clicking the first point closes an area
+        if (exTool === "area" && draw.pts.length >= 3 && screenPx(dist(p, draw.pts[0])) < 10) { finishDraw(); return; }
+        draw.pts.push(p);
+        exDrawShapes();
+      });
+      svg.addEventListener("dblclick", e => {
+        if (!draw || exTool === "scale") return;
+        e.preventDefault();
+        // the two clicks of a double-click each added a point; drop the extra one
+        if (draw.pts.length >= 2 && screenPx(dist(draw.pts[draw.pts.length - 1], draw.pts[draw.pts.length - 2])) < 4) draw.pts.pop();
+        finishDraw();
+      });
+      svg.addEventListener("contextmenu", e => {
+        const shape = e.target.closest("[data-mid]");
+        if (!shape) return;
+        e.preventDefault();
+        const m = exMeas.find(x => x.id === +shape.dataset.mid);
+        if (!m) return;
+        if (m.kind === "count" && shape.dataset.pi !== undefined) {
+          m.pts.splice(+shape.dataset.pi, 1);
+          if (!m.pts.length) exMeas = exMeas.filter(x => x !== m);
+        } else exMeas = exMeas.filter(x => x !== m);
+        exChanged();
+      });
+    }
+
+    function addCount(p) {
+      // All count marks for an item on a page live in one measurement
+      let m = exMeas.find(x => x.itemId === exItemId && x.docId === exDoc.id && x.page === exDoc.page && x.kind === "count");
+      if (!m) { m = { id: nextId++, itemId: exItemId, docId: exDoc.id, page: exDoc.page, kind: "count", pts: [] }; exMeas.push(m); }
+      m.pts.push(p);
+      exChanged();
+    }
+
+    function finishDraw() {
+      if (!draw) return;
+      const need = exTool === "area" ? 3 : 2;
+      if (draw.pts.length < need) { toast(exTool === "area" ? "An area needs at least 3 corners." : "Click at least 2 points."); return; }
+      const m = { id: nextId++, itemId: exItemId, docId: exDoc.id, page: exDoc.page, kind: exTool, pts: draw.pts.slice() };
+      if (exTool === "wall") { askHeight(m); return; }
+      exMeas.push(m);
+      draw = null; exChanged();
+    }
+    function cancelDraw() { draw = null; document.querySelectorAll(".ex-pop").forEach(p => p.remove()); if (exView) exDrawShapes(); }
+
+    // Popups placed next to the last point
+    function exPopup(at, html) {
+      document.querySelectorAll(".ex-pop").forEach(p => p.remove());
+      const pop = document.createElement("div");
+      pop.className = "ex-pop"; pop.innerHTML = html;
+      exView.wrap.appendChild(pop);
+      const W = exView.wrap.clientWidth, H = exView.wrap.clientHeight;
+      let x = screenPx(at[0]) + 12, y = screenPx(at[1]) + 12;
+      if (x + pop.offsetWidth > W) x = Math.max(4, screenPx(at[0]) - pop.offsetWidth - 12);
+      if (y + pop.offsetHeight > H) y = Math.max(4, H - pop.offsetHeight - 4);
+      pop.style.left = x + "px"; pop.style.top = y + "px";
+      pop.addEventListener("click", e => e.stopPropagation());
+      pop.addEventListener("dblclick", e => e.stopPropagation());
+      return pop;
+    }
+
+    function askScale(pts) {
+      const len = dist(pts[0], pts[1]);
+      const pop = exPopup(pts[1], `<div class="t">How long is this line on the plan?</div>
+        <div class="presets"><button data-ft="80">80 ft</button><button data-ft="100">100 ft</button><button data-ft="200">200 ft</button></div>
+        <div class="inl"><input class="money" id="exFt" inputmode="decimal" placeholder="Other"> ft</div>
+        <div class="or">or type the plan's scale: 1 inch =</div>
+        <div class="inl"><input class="money" id="exInch" inputmode="decimal" placeholder="e.g. 40"> ft</div>
+        <label class="check"><input type="checkbox" id="exAll" ${exDoc.numPages > 1 ? "checked" : ""}> Use on every page of this PDF</label>
+        <div class="btns"><button class="cancel">Cancel</button><button class="save">Set scale</button></div>`);
+      const apply = upf => {
+        if (!upf || !isFinite(upf) || upf <= 0) { toast("Enter a length in feet."); return; }
+        if (pop.querySelector("#exAll").checked) for (let p = 1; p <= exDoc.numPages; p++) exDoc.upf[p] = upf;
+        else exDoc.upf[exDoc.page] = upf;
+        draw = null; pop.remove();
+        const it = exItems.find(i => i.id === exItemId);
+        exTool = it ? it.tool : null;
+        toast(`Scale set: 1" = ${+(72 / upf).toFixed(2)} ft`);
+        exChanged(); exRenderItems();
+      };
+      pop.querySelectorAll(".presets button").forEach(b => b.onclick = () => apply(len / +b.dataset.ft));
+      pop.querySelector(".save").onclick = () => {
+        const ft = num(pop.querySelector("#exFt").value), inch = num(pop.querySelector("#exInch").value);
+        apply(inch ? 72 / inch : ft ? len / ft : null);
+      };
+      pop.querySelector(".cancel").onclick = () => { pop.remove(); draw = null; exDrawShapes(); };
+      pop.addEventListener("keydown", e => { if (e.key === "Enter") pop.querySelector(".save").click(); if (e.key === "Escape") pop.querySelector(".cancel").click(); });
+      pop.querySelector("#exFt").focus();
+    }
+
+    function askHeight(m) {
+      const it = exItems.find(i => i.id === m.itemId);
+      const lenFt = pathLen(m.pts) / exScale();
+      const pop = exPopup(m.pts[m.pts.length - 1], `<div class="t">Wall height</div>
+        <div style="margin-bottom:8px;color:var(--muted)">Length ${fmt(lenFt, 1)} ft × height = sq ft</div>
+        <div class="inl"><input class="money" id="exH" inputmode="decimal" value="${it.lastHeight ?? ""}" placeholder="e.g. 6"> ft high</div>
+        <div class="or" id="exHsf"></div>
+        <div class="btns"><button class="cancel">Cancel</button><button class="save">Save</button></div>`);
+      const h = pop.querySelector("#exH");
+      const upd = () => { const v = num(h.value); pop.querySelector("#exHsf").textContent = v ? `= ${fmt(lenFt * v)} sq ft` : ""; };
+      h.addEventListener("input", upd); upd();
+      pop.querySelector(".save").onclick = () => {
+        const v = num(h.value);
+        if (!v || v <= 0) { toast("Enter the wall height in feet."); return h.focus(); }
+        m.height = v; it.lastHeight = v;
+        exMeas.push(m); draw = null; pop.remove(); exChanged();
+      };
+      pop.querySelector(".cancel").onclick = () => { pop.remove(); exDrawShapes(); };
+      pop.addEventListener("keydown", e => { if (e.key === "Enter") pop.querySelector(".save").click(); if (e.key === "Escape") pop.querySelector(".cancel").click(); });
+      h.focus(); h.select();
+    }
+
+    // Draw saved shapes, the shape in progress, and labels
+    function exDrawShapes() {
+      if (!exView || !exDoc) return;
+      const svg = exView.svg, k = 1 / exView.scale;    // k = page units per screen pixel
+      svg.classList.toggle("drawing", !!exTool);
+      const upf = exScale();
+      // A solid tag in the item's color with white text, sized to stay readable at any zoom
+      const label = (x, y, text, color) => {
+        const w = (String(text).length * 6.6 + 10) * k, h = 17 * k;
+        return `<g pointer-events="none"><rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="${4 * k}" fill="${color}" opacity=".95"/>
+          <text x="${x}" y="${y + 4 * k}" font-size="${11.5 * k}" font-family="-apple-system,Segoe UI,Arial,sans-serif" font-weight="700" text-anchor="middle" fill="#fff">${esc(text)}</text></g>`;
+      };
+      const ptsAttr = pts => pts.map(p => p.join(",")).join(" ");
+      let out = "";
+      for (const m of exMeas.filter(x => x.docId === exDoc.id && x.page === exDoc.page)) {
+        const it = exItems.find(i => i.id === m.itemId); if (!it) continue;
+        const c = it.color, dim = exItemId && m.itemId !== exItemId ? 0.45 : 1;
+        out += `<g opacity="${dim}">`;
+        if (m.kind === "area") {
+          const cx = m.pts.reduce((s, p) => s + p[0], 0) / m.pts.length, cy = m.pts.reduce((s, p) => s + p[1], 0) / m.pts.length;
+          out += `<polygon data-mid="${m.id}" points="${ptsAttr(m.pts)}" fill="${c}" fill-opacity=".28" stroke="${c}" stroke-width="${2 * k}"><title>${esc(it.name)} (right-click to remove)</title></polygon>`;
+          if (upf) out += label(cx, cy, `${fmt(polyArea(m.pts) / upf / upf)} SF`, c);
+        } else if (m.kind === "linear" || m.kind === "wall") {
+          const mid = m.pts[Math.floor((m.pts.length - 1) / 2)], nx = m.pts[Math.floor((m.pts.length - 1) / 2) + 1] || mid;
+          out += `<polyline data-mid="${m.id}" points="${ptsAttr(m.pts)}" fill="none" stroke="${c}" stroke-width="${(m.kind === "wall" ? 6 : 4) * k}" stroke-linecap="round" stroke-linejoin="round"
+                   ${m.kind === "wall" ? `stroke-dasharray="${10 * k} ${4 * k}"` : ""}><title>${esc(it.name)} (right-click to remove)</title></polyline>`;
+          if (upf) {
+            const ft = pathLen(m.pts) / upf;
+            out += label((mid[0] + nx[0]) / 2, (mid[1] + nx[1]) / 2 - 6 * k, m.kind === "wall" ? `${fmt(ft)} × ${m.height} ft = ${fmt(ft * m.height)} SF` : `${fmt(ft, 1)} LF`, c);
+          }
+        } else if (m.kind === "count") {
+          m.pts.forEach((p, i) => {
+            out += `<circle data-mid="${m.id}" data-pi="${i}" cx="${p[0]}" cy="${p[1]}" r="${7 * k}" fill="${c}" stroke="#fff" stroke-width="${2 * k}"><title>${esc(it.name)} #${i + 1} (right-click to remove)</title></circle>`;
+            out += `<text x="${p[0]}" y="${p[1] + 3.5 * k}" font-size="${9 * k}" font-family="sans-serif" font-weight="700" text-anchor="middle" fill="#fff" pointer-events="none">${i + 1}</text>`;
+          });
+        }
+        out += `</g>`;
+      }
+      // Scale line already set on this page (shown faintly)
+      // In-progress shape
+      if (draw && draw.pts.length) {
+        const it = exItems.find(i => i.id === exItemId);
+        const c = exTool === "scale" ? "#111827" : (it ? it.color : "#111827");
+        const pts = mouse ? [...draw.pts, mouse] : draw.pts;
+        if (exTool === "area" && pts.length >= 3) out += `<polygon points="${ptsAttr(pts)}" fill="${c}" fill-opacity=".15" stroke="none" pointer-events="none"/>`;
+        out += `<polyline points="${ptsAttr(pts)}" fill="none" stroke="${c}" stroke-width="${2.5 * k}" stroke-dasharray="${6 * k} ${4 * k}" pointer-events="none"/>`;
+        draw.pts.forEach((p, i) => out += `<circle cx="${p[0]}" cy="${p[1]}" r="${(i === 0 && exTool === "area" ? 6 : 4) * k}" fill="#fff" stroke="${c}" stroke-width="${2 * k}" pointer-events="none"/>`);
+        if (mouse && upf && exTool !== "scale") {
+          const txt = exTool === "area" && pts.length >= 3 ? `${fmt(polyArea(pts) / upf / upf)} SF` : `${fmt(pathLen(pts) / upf, 1)} ft`;
+          out += label(mouse[0], mouse[1] - 12 * k, txt, c);
+        }
+      }
+      svg.innerHTML = out;
+    }
+
+    // Keyboard: 1–9 items, A/L/C/W/S tools, Enter finish, Backspace undo point, Esc cancel, +/- zoom
+    document.addEventListener("keydown", e => {
+      if (!$("exWrap") || $("exWrap").classList.contains("hidden")) return;
+      if (!document.querySelector(".panel.active #exWrap")) return;
+      if (e.target.closest("input, textarea, select") || e.metaKey || e.ctrlKey || e.altKey) return;
+      const k = e.key.toLowerCase();
+      if (/^[1-9]$/.test(k) && exItems[+k - 1]) { setExItem(exItems[+k - 1].id); e.preventDefault(); }
+      else if (k === "a") setExTool("area");
+      else if (k === "l") setExTool("linear");
+      else if (k === "c") setExTool("count");
+      else if (k === "w") setExTool("wall");
+      else if (k === "s") setExTool("scale");
+      else if (k === "enter" && draw) { e.preventDefault(); finishDraw(); }
+      else if (k === "backspace" && draw) { e.preventDefault(); draw.pts.pop(); if (!draw.pts.length) draw = null; exDrawShapes(); }
+      else if (k === "escape") { if (draw) cancelDraw(); else setExItem(null); }
+      else if (k === "+" || k === "=") setZoom(exZoom * 1.25);
+      else if (k === "-") setZoom(exZoom / 1.25);
+    });
+
+    // Tally table
+    function renderExTally() {
+      const el = $("exTally");
+      if (!exItems.length) { el.innerHTML = `<div style="color:var(--muted);font-size:13px">Add an item and measure it on the plan.</div>`; return; }
+      const basisOpts = sel => bases.length ? bases.map(b => `<option value="${b.id}" ${b.id === sel ? "selected" : ""}>${esc(b.name)}</option>`).join("") : `<option value="">No bases yet</option>`;
+      let grand = 0;
+      el.innerHTML = `<table class="t"><thead><tr><th>Item</th><th>Measured</th><th class="n">Qty (priced unit)</th><th class="n">Unit cost</th><th class="n">Total</th><th>Basis</th><th>Life</th><th></th></tr></thead><tbody>
+        ${exItems.map(it => {
+          const q = exItemQty(it), total = q.qty * it.unitCost; grand += total;
+          const ms = exMeas.filter(m => m.itemId === it.id);
+          return `<tr data-item="${it.id}">
+            <td><span class="dot" style="background:${it.color}"></span><b>${esc(it.name)}</b>${it.csi ? `<br><span class="csi" style="margin-left:17px">CSI ${it.csi}</span>` : `<br><span class="csi" style="margin-left:17px">Custom</span>`}</td>
+            <td>${TOOL_LABEL[it.tool]} · ${q.label}</td>
+            <td class="n">${fmt(q.qty, 2)} <span class="csi">${esc(unitLabel(it.unit))}</span></td>
+            <td class="n">${money2(it.unitCost)}</td>
+            <td class="n"><b>${money2(total)}</b></td>
+            <td><select class="mini" data-basis>${basisOpts(it.basisId)}</select></td>
+            <td><select class="mini" data-life>${[5, 7, 15].map(l => `<option value="${l}" ${it.life === l ? "selected" : ""}>${l} yr</option>`).join("")}</select></td>
+            <td><button class="x" title="Remove item and its measurements">×</button></td></tr>` +
+            ms.map((m, i) => {
+              const v = measSize(m);
+              const what = m.kind === "count" ? `${m.pts.length} marked` : v === null ? "page has no scale" :
+                m.kind === "area" ? `${fmt(v)} SF` : m.kind === "wall" ? `${fmt(v / m.height, 1)} LF × ${m.height} ft = ${fmt(v)} SF` : `${fmt(v, 1)} LF`;
+              const d = exDocs.find(x => x.id === m.docId);
+              return `<tr class="meas" data-mid="${m.id}"><td>${TOOL_LABEL[m.kind]} ${i + 1} · ${esc(d ? d.name : "")} p. ${m.page}</td><td colspan="6">${what}</td><td><button class="x" title="Remove this measurement">×</button></td></tr>`;
+            }).join("");
+        }).join("")}
+        <tr class="total"><td>Total</td><td></td><td></td><td></td><td class="n">${money2(grand)}</td><td colspan="3"></td></tr></tbody></table>`;
+
+      el.querySelectorAll("tr[data-item]").forEach(tr => {
+        const it = exItems.find(i => i.id === +tr.dataset.item);
+        tr.querySelector("[data-basis]").onchange = e => { it.basisId = +e.target.value || null; exChanged(); };
+        tr.querySelector("[data-life]").onchange = e => { it.life = +e.target.value; exChanged(); };
+        tr.querySelector(".x").onclick = () => {
+          const n = exMeas.filter(m => m.itemId === it.id).length;
+          if (n && !confirm(`Remove ${it.name} and its ${n} measurement${n > 1 ? "s" : ""}?`)) return;
+          exItems = exItems.filter(i => i !== it); exMeas = exMeas.filter(m => m.itemId !== it.id);
+          if (exItemId === it.id) { exItemId = null; exTool = null; }
+          exChanged();
+        };
+      });
+      el.querySelectorAll("tr.meas").forEach(tr => tr.querySelector(".x").onclick = () => { exMeas = exMeas.filter(m => m.id !== +tr.dataset.mid); exChanged(); });
+    }
+
+    // Exterior items become Takeoffs lines (kept in sync)
+    function syncExteriorTakeoffs() {
+      takeoffs = takeoffs.filter(t => t.source !== "exterior");
+      for (const it of exItems) {
+        if (!it.basisId || !bases.some(b => b.id === it.basisId)) it.basisId = defaultBasisId();
+        const q = exItemQty(it);
+        if (!it.basisId || q.qty <= 0) continue;
+        takeoffs.push({ id: "ex" + it.id, source: "exterior", extItemId: it.id, csi: it.csi, name: it.name, unit: it.unit,
+                        unitCost: it.unitCost, qty: q.qty, total: q.qty * it.unitCost, basisId: it.basisId, life: it.life, category: it.category });
+      }
+    }
+    function exChanged() {
+      exRenderItems(); exDrawShapes(); exUpdateBar(); renderExTally(); exRenderDocs();
+      syncExteriorTakeoffs(); renderTakeoffs(); updateChrome();
+    }
+    // Keep the basis choices current when bases change
+    const _renderBasesOrig = renderBases;
+    renderBases = function () { _renderBasesOrig(); if (typeof exItems !== "undefined") { syncExteriorTakeoffs(); renderExTally(); renderTakeoffs(); } };
+    window.addEventListener("resize", () => { if (exDoc && document.querySelector(".panel.active #exWrap")) exRenderPage(); });
+    renderExTally();
 
     // ---------- Study summary bar and step checkmarks ----------
     function basisDepreciable(b) { return b.kind === KINDS[0] ? depreciable(b) : num(b.amount); }
@@ -1517,6 +2179,23 @@
     try { savedTheme = localStorage.getItem("csp-theme") || "dark"; } catch {}
     setTheme(savedTheme);
     $("themeBtn").onclick = () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+
+    // ---------- Signed-in user ----------
+    // When served by the app server, this confirms the session; opened as a plain file it does nothing.
+    if (location.protocol.startsWith("http")) {
+      fetch("/api/me", { credentials: "same-origin" }).then(async r => {
+        if (r.status === 401) { location.href = "/login"; return; }
+        const { user } = await r.json();
+        $("userName").textContent = user.name || user.email;
+        $("userName").title = user.email;
+        $("userName").classList.remove("hidden");
+        $("signOut").classList.remove("hidden");
+      }).catch(() => {});
+      $("signOut").onclick = async () => {
+        await fetch("/api/logout", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}", credentials: "same-origin" }).catch(() => {});
+        location.href = "/login";
+      };
+    }
 
     renderBases();
     updateChrome();

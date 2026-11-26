@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in · Cost Seg Professional</title>
+  <style>
+    :root {
+      --bg: #f5f2ea; --paper: #fffdf8; --ink: #1d2633; --ink2: #46505e; --muted: #7a7466;
+      --line: #d3ccbb; --head: #17263d; --solid: #17263d; --gold: #b08d57; --err: #b42318; --errbg: #fdecea;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color-scheme: light;
+    }
+    :root[data-theme="dark"] {
+      --bg: #0e141c; --paper: #161e29; --ink: #e4e8ee; --ink2: #b3bcc8; --muted: #8a94a2;
+      --line: #344257; --head: #e9edf3; --solid: #2f5f93; --err: #ffb4a8; --errbg: #3a1d1a;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: var(--sans); background: var(--bg); color: var(--ink);
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .side {
+      background: #0a0f16; color: #e8e3d6; padding: 48px 56px; display: flex; flex-direction: column;
+      background-image: radial-gradient(1200px 600px at -10% 110%, #2f5f9333, transparent 60%);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 40px; height: 40px; border-radius: 9px; border: 1px solid var(--gold); color: var(--gold);
+      display: grid; place-items: center; font-family: var(--serif); font-size: 16px; font-weight: 700;
+    }
+    .brand-name { font-family: var(--serif); font-size: 20px; color: #fff; }
+    .pitch { margin: auto 0; max-width: 440px; }
+    .pitch h1 { font-family: var(--serif); font-weight: 600; font-size: 40px; line-height: 1.15; margin: 0 0 16px; color: #fff; }
+    .pitch p { color: #aab6c6; font-size: 16px; line-height: 1.6; margin: 0; }
+    .pitch ul { list-style: none; padding: 0; margin: 28px 0 0; color: #c9d2de; font-size: 14px; }
+    .pitch li { padding: 7px 0 7px 26px; position: relative; }
+    .pitch li::before { content: ""; position: absolute; left: 4px; top: 13px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+    .side small { color: #6e7b8d; font-size: 12px; }
+
+    .main { display: grid; place-items: center; padding: 40px 24px; }
+    .card { width: 100%; max-width: 400px; }
+    .tabs { display: flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; margin-bottom: 26px; }
+    .tabs button {
+      flex: 1; border: 0; background: var(--paper); color: var(--ink2); font: inherit; font-size: 14px;
+      padding: 10px; cursor: pointer;
+    }
+    .tabs button.on { background: var(--solid); color: #fff; font-weight: 600; }
+    h2 { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--head); margin: 0 0 6px; }
+    .sub { color: var(--muted); margin: 0 0 22px; font-size: 14px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--ink2); margin: 14px 0 6px; }
+    .pw { position: relative; }
+    input {
+      width: 100%; font: inherit; font-size: 15px; color: var(--ink); background: var(--paper);
+      border: 1px solid var(--line); border-radius: 7px; padding: 11px 12px;
+    }
+    input:focus { outline: none; border-color: #6fa3d8; box-shadow: 0 0 0 3px #6fa3d833; }
+    .pw input { padding-right: 60px; }
+    .pw button {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: none;
+      color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; padding: 6px;
+    }
+    .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .err { background: var(--errbg); color: var(--err); border-radius: 7px; padding: 10px 12px; font-size: 13px; margin-top: 16px; }
+    .go {
+      width: 100%; margin-top: 22px; border: 0; border-radius: 8px; padding: 12px; cursor: pointer;
+      background: var(--solid); color: #fff; font: inherit; font-size: 15px; font-weight: 600;
+    }
+    .go:disabled { opacity: .6; cursor: wait; }
+    .switch { text-align: center; margin-top: 18px; font-size: 14px; color: var(--muted); }
+    .switch button { border: 0; background: none; color: #6fa3d8; font: inherit; cursor: pointer; padding: 0; }
+    :root:not([data-theme="dark"]) .switch button { color: #2f5d8a; }
+    .hidden { display: none !important; }
+    @media (max-width: 860px) {
+      body { grid-template-columns: 1fr; }
+      .side { padding: 24px; }
+      .pitch { margin: 28px 0 8px; }
+      .pitch h1 { font-size: 28px; }
+      .pitch ul, .side small { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <section class="side">
+    <div class="brand"><div class="brand-mark">CS</div><div class="brand-name">Cost Seg Professional</div></div>
+    <div class="pitch">
+      <h1>Cost segregation studies, start to finish.</h1>
+      <p>Build each study from the source documents through the depreciation report, with every value traced back to its workpaper.</p>
+      <ul>
+        <li>Highlight audit support right on the PDF</li>
+        <li>Bonus % set by the law in effect when acquired</li>
+        <li>423 RS Means line items, ready to search</li>
+      </ul>
+    </div>
+    <small>Your account is private to you.</small>
+  </section>
+
+  <main class="main">
+    <div class="card">
+      <div class="tabs">
+        <button type="button" data-mode="signin" class="on">Sign in</button>
+        <button type="button" data-mode="signup">Create account</button>
+      </div>
+
+      <form id="form" novalidate>
+        <h2 id="title">Welcome back</h2>
+        <p class="sub" id="sub">Sign in to continue to your studies.</p>
+
+        <div id="nameRow" class="hidden">
+          <label for="name">Full name</label>
+          <input id="name" autocomplete="name">
+        </div>
+
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" required>
+
+        <label for="password">Password</label>
+        <div class="pw">
+          <input id="password" type="password" autocomplete="current-password" required>
+          <button type="button" id="showPw">Show</button>
+        </div>
+        <div class="hint hidden" id="pwHint">At least 10 characters.</div>
+
+        <div id="confirmRow" class="hidden">
+          <label for="confirm">Confirm password</label>
+          <input id="confirm" type="password" autocomplete="new-password">
+        </div>
+
+        <div class="err hidden" id="err" role="alert"></div>
+        <button class="go" id="go" type="submit">Sign in</button>
+      </form>
+
+      <div class="switch" id="switch"></div>
+    </div>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    try { document.documentElement.dataset.theme = localStorage.getItem("csp-theme") || "dark"; } catch {}
+
+    let mode = location.hash === "#signup" ? "signup" : "signin";
+    function setMode(m) {
+      mode = m;
+      const up = m === "signup";
+      document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.mode === m));
+      $("title").textContent = up ? "Create your account" : "Welcome back";
+      $("sub").textContent = up ? "Set up an account to start building studies." : "Sign in to continue to your studies.";
+      $("nameRow").classList.toggle("hidden", !up);
+      $("confirmRow").classList.toggle("hidden", !up);
+      $("pwHint").classList.toggle("hidden", !up);
+      $("password").autocomplete = up ? "new-password" : "current-password";
+      $("go").textContent = up ? "Create account" : "Sign in";
+      $("switch").innerHTML = up
+        ? `Already have an account? <button type="button" data-to="signin">Sign in</button>`
+        : `New here? <button type="button" data-to="signup">Create an account</button>`;
+      $("switch").querySelector("button").onclick = e => setMode(e.target.dataset.to);
+      $("err").classList.add("hidden");
+      (up ? $("name") : $("email")).focus();
+    }
+    document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => setMode(b.dataset.mode));
+    $("showPw").onclick = () => {
+      const show = $("password").type === "password";
+      $("password").type = $("confirm").type = show ? "text" : "password";
+      $("showPw").textContent = show ? "Hide" : "Show";
+    };
+
+    function fail(msg) { $("err").textContent = msg; $("err").classList.remove("hidden"); }
+
+    $("form").addEventListener("submit", async e => {
+      e.preventDefault();
+      $("err").classList.add("hidden");
+      const up = mode === "signup";
+      const body = { email: $("email").value.trim(), password: $("password").value };
+      if (up) body.name = $("name").value.trim();
+
+      if (up && !body.name) return fail("Enter your name.");
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(body.email)) return fail("Enter a valid email address.");
+      if (!body.password) return fail("Enter your password.");
+      if (up && body.password.length < 10) return fail("Password must be at least 10 characters.");
+      if (up && body.password !== $("confirm").value) return fail("Passwords don't match.");
+
+      $("go").disabled = true;
+      try {
+        const r = await fetch(up ? "/api/signup" : "/api/login", {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), credentials: "same-origin"
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) return fail(data.error || "Something went wrong. Try again.");
+        location.href = "/";
+      } catch {
+        fail("Can't reach the server. Check your connection and try again.");
+      } finally {
+        $("go").disabled = false;
+      }
+    });
+
+    setMode(mode);
+  </script>
+</body>
+</html>
