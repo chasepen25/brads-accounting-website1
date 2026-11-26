@@ -72,11 +72,16 @@
 
     .docs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .doc-pill {
-      border: 1px solid #c9d0da; background: #fff; border-radius: 999px;
-      padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; color: #1f2937;
+      display: inline-flex; align-items: center;
+      border: 1px solid #c9d0da; background: #fff; border-radius: 999px; overflow: hidden;
     }
-    .doc-pill.active { background: #0f2a4a; color: #fff; border-color: #0f2a4a; }
-    .doc-pill span { opacity: .7; margin-left: 6px; }
+    .doc-pill.active { background: #0f2a4a; border-color: #0f2a4a; }
+    .doc-pill button { border: 0; background: none; font: inherit; font-size: 13px; cursor: pointer; color: #1f2937; }
+    .doc-pill.active button { color: #fff; }
+    .doc-pill .open { padding: 6px 4px 6px 12px; }
+    .doc-pill .open span { opacity: .7; margin-left: 6px; }
+    .doc-pill .del { padding: 6px 11px 6px 7px; font-size: 16px; line-height: 1; opacity: .55; }
+    .doc-pill .del:hover { opacity: 1; color: #dc2626; }
 
     .palette {
       position: sticky; top: 0; z-index: 20;
@@ -451,13 +456,32 @@
       $("palette").classList.toggle("hidden", docs.length === 0);
       $("docList").innerHTML = docs.map(d => {
         const n = findings.filter(f => f.docId === d.id).length;
-        return `<button class="doc-pill ${d === currentDoc ? "active" : ""}" data-id="${d.id}">📄 ${esc(d.name)}<span>${d.numPages} pg${n ? ` · ${n} found` : ""}</span></button>`;
+        return `<span class="doc-pill ${d === currentDoc ? "active" : ""}" data-id="${d.id}">
+                  <button class="open">📄 ${esc(d.name)}<span>${d.numPages} pg${n ? ` · ${n} found` : ""}</span></button>
+                  <button class="del" title="Delete this workpaper">×</button></span>`;
       }).join("");
-      $("docList").querySelectorAll(".doc-pill").forEach(b => b.onclick = () => {
-        currentDoc = docs.find(d => d.id === +b.dataset.id);
-        renderDocList();
-        renderPages();
+      $("docList").querySelectorAll(".doc-pill").forEach(pill => {
+        const doc = docs.find(d => d.id === +pill.dataset.id);
+        pill.querySelector(".open").onclick = () => { currentDoc = doc; renderDocList(); renderPages(); };
+        pill.querySelector(".del").onclick = () => deleteDoc(doc);
       });
+    }
+
+    // Remove a workpaper and everything highlighted on it
+    function deleteDoc(doc) {
+      const n = findings.filter(f => f.docId === doc.id).length;
+      const msg = n
+        ? `Delete "${doc.name}"? Its ${n} highlighted item${n > 1 ? "s" : ""} will be removed too.`
+        : `Delete "${doc.name}"?`;
+      if (!confirm(msg)) return;
+      findings = findings.filter(f => f.docId !== doc.id);
+      docs.splice(docs.indexOf(doc), 1);
+      doc.pdf.destroy();
+      if (currentDoc === doc) { currentDoc = docs[docs.length - 1] || null; setActive(null); }
+      refreshCounts();
+      syncOverview();
+      renderDocList();
+      renderPages();
     }
 
     let renderToken = 0;
