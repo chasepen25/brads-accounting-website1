@@ -4,10 +4,225 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cost Seg Professional</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f4f6f9;
+      color: #1f2937;
+    }
+    header { background: #0f2a4a; color: #fff; padding: 18px 28px; }
+    header h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: .3px; }
+    nav {
+      display: flex; flex-wrap: wrap;
+      background: #fff; border-bottom: 1px solid #d9dee5; padding: 0 20px;
+    }
+    nav button {
+      background: none; border: none; border-bottom: 3px solid transparent;
+      padding: 14px 14px 11px; font: inherit; font-size: 14px;
+      color: #4b5563; cursor: pointer; white-space: nowrap;
+    }
+    nav button:hover { color: #0f2a4a; background: #f4f6f9; }
+    nav button.active { color: #0f2a4a; font-weight: 600; border-bottom-color: #2f80ed; }
+    main { padding: 28px; max-width: 1100px; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .panel h2 { margin: 0 0 6px; font-size: 20px; }
+    .panel > p { margin: 0; color: #6b7280; }
+    .card {
+      margin-top: 20px; background: #fff; border: 1px dashed #c3cad4;
+      border-radius: 8px; padding: 40px; text-align: center; color: #9ca3af;
+    }
+
+    /* Overview form */
+    .section {
+      margin-top: 20px; background: #fff; border: 1px solid #d9dee5;
+      border-radius: 8px; padding: 20px 22px;
+    }
+    .section h3 { margin: 0 0 14px; font-size: 15px; color: #0f2a4a; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 18px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field.wide { grid-column: 1 / -1; }
+    .field label { font-size: 12px; font-weight: 600; color: #4b5563; }
+    .field input, .field select, .field textarea {
+      font: inherit; font-size: 14px; color: #1f2937;
+      border: 1px solid #c9d0da; border-radius: 6px; padding: 8px 10px; background: #fff;
+    }
+    .field textarea { min-height: 80px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none; border-color: #2f80ed; box-shadow: 0 0 0 3px #2f80ed22;
+    }
+    .field label.check { display: flex; align-items: center; gap: 8px; font-weight: 500; color: #1f2937; font-size: 14px; margin-top: 4px; cursor: pointer; }
+    .field label.check input { width: 16px; height: 16px; margin: 0; }
+    .hidden { display: none !important; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module" src="app.js"></script>
+  <header>
+    <h1>Cost Seg Professional</h1>
+  </header>
+
+  <nav id="tabs"></nav>
+  <main id="panels"></main>
+
+  <template id="overview-form">
+    <div class="section">
+      <h3>Study</h3>
+      <div class="grid">
+        <div class="field"><label for="studyNumber">Study number</label><input id="studyNumber"></div>
+        <div class="field"><label for="taxpayerEntity">Taxpayer entity</label><input id="taxpayerEntity"></div>
+        <div class="field"><label for="letterAddressee">Letter addressee</label><input id="letterAddressee"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Property</h3>
+      <div class="grid">
+        <div class="field wide"><label for="address">Address</label><input id="address"></div>
+
+        <div class="field">
+          <label for="propertyType">Property type</label>
+          <select id="propertyType">
+            <option value="">Select…</option>
+            <option>Residential</option>
+            <option>Multifamily</option>
+            <option>Industrial</option>
+            <option>Office</option>
+            <option>Retail</option>
+            <option>Restaurant</option>
+            <option>Special Purpose</option>
+            <option>Hospitality</option>
+            <option value="Custom">Custom</option>
+          </select>
+          <input id="customPropertyType" class="hidden" placeholder="Enter property type">
+          <label id="strRow" class="check hidden"><input type="checkbox" id="shortTermRental"> Short-term rental?</label>
+        </div>
+
+        <div class="field">
+          <label for="assetClass">Asset class</label>
+          <select id="assetClass"><option value="">Select a property type first</option></select>
+          <input id="customAssetClass" class="hidden" placeholder="Enter asset class">
+        </div>
+
+        <div class="field"><label for="buildingLife">Building life (years)</label><input id="buildingLife" inputmode="decimal"></div>
+        <div class="field"><label for="totalSqft">Total sq ft</label><input id="totalSqft" inputmode="numeric"></div>
+        <div class="field"><label for="lotSize">Lot size</label><input id="lotSize"></div>
+        <div class="field"><label for="stories">Stories</label><input id="stories" inputmode="numeric"></div>
+        <div class="field"><label for="yearBuilt">Year built</label><input id="yearBuilt" inputmode="numeric"></div>
+
+        <div class="field wide"><label for="propertyDescription">Property description</label><textarea id="propertyDescription"></textarea></div>
+        <div class="field wide"><label for="improvementDetails">Improvement details</label><textarea id="improvementDetails"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Site visit</h3>
+      <div class="grid">
+        <div class="field"><label for="siteVisitType">Site visit type</label><input id="siteVisitType"></div>
+        <div class="field"><label for="inspector">Inspector</label><input id="inspector"></div>
+        <div class="field"><label for="visitDate">Visit date</label><input id="visitDate" type="date"></div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const tabs = [
+      ["Workpapers", "Source documents and supporting files."],
+      ["Overview", "Property summary and study details."],
+      ["Bases", "Purchase price, land allocation, and depreciable basis."],
+      ["Takeoffs", "Quantity takeoffs by building component."],
+      ["Exterior", "Site work and land improvements."],
+      ["Electrical", "Electrical systems and dedicated circuits."],
+      ["Depr Adj", "Depreciation adjustments and catch-up."],
+      ["Unit Cost Detail", "Unit costs with location adjustments."],
+      ["Indirect Costs", "Soft costs allocated across components."],
+      ["Depreciation Report", "MACRS schedules by asset class."],
+      ["Review & Deliver", "Final checks and client deliverables."]
+    ];
+
+    // Asset class choices for each property type
+    const ASSET_CLASSES = {
+      "Residential": ["Single Family", "Condo Rental", "Multi-plex Rental", "Townhome", "Cabin"],
+      "Multifamily": ["Garden Apartments", "Walk-up Apartments", "Apartment Complex", "Apartment High-rise",
+                      "Mixed Use - Apartments/Retail", "Assisted Living", "Mobile Home Park"],
+      "Industrial":  ["Flex Warehouse", "Bulk Warehouse", "Light Assembly", "Manufacturing"],
+      "Office":      ["Office Condo", "Inline Office Suite", "Low-rise Office Building", "Mid-rise Building",
+                      "Office High-rise", "Office Park", "Mixed Use - Office/Retail", "Medical Office", "Medical Office Condo"],
+      "Retail":      ["Retail Outparcel", "Inline Retail Unit", "Strip Mall", "Shopping Center", "Power Center"],
+      "Restaurant":  ["Inline Restaurant", "Outparcel Restaurant"],
+      "Special Purpose": ["Car Wash", "Gas Station", "Auto Garage", "RV Park", "Self-Storage", "Recreation Center"],
+      "Hospitality": ["Hotel", "Hotel (Full Service)", "Motel"]
+    };
+
+    const nav = document.getElementById("tabs");
+    const main = document.getElementById("panels");
+
+    tabs.forEach(([name, desc], i) => {
+      const btn = document.createElement("button");
+      btn.textContent = name;
+      btn.onclick = () => show(i);
+      nav.appendChild(btn);
+
+      const panel = document.createElement("section");
+      panel.className = "panel";
+      panel.innerHTML = `<h2>${name}</h2><p>${desc}</p>`;
+      if (name === "Overview") {
+        panel.appendChild(document.getElementById("overview-form").content.cloneNode(true));
+      } else {
+        panel.insertAdjacentHTML("beforeend", `<div class="card">${name} content goes here</div>`);
+      }
+      main.appendChild(panel);
+    });
+
+    function show(i) {
+      nav.querySelectorAll("button").forEach((b, j) => b.classList.toggle("active", i === j));
+      main.querySelectorAll(".panel").forEach((p, j) => p.classList.toggle("active", i === j));
+    }
+
+    // Property type -> asset class dropdown
+    const propertyType = document.getElementById("propertyType");
+    const customPropertyType = document.getElementById("customPropertyType");
+    const assetClass = document.getElementById("assetClass");
+    const customAssetClass = document.getElementById("customAssetClass");
+
+    propertyType.addEventListener("change", () => {
+      const type = propertyType.value;
+      const isCustom = type === "Custom";
+      customPropertyType.classList.toggle("hidden", !isCustom);
+      if (isCustom) customPropertyType.focus();
+
+      const options = ASSET_CLASSES[type] || [];
+      // Custom types, and types without a list yet, get a free-text asset class
+      const freeText = type !== "" && options.length === 0;
+      assetClass.classList.toggle("hidden", freeText);
+      customAssetClass.classList.toggle("hidden", !freeText);
+      customAssetClass.value = "";
+
+      // Short-term rental checkbox only for Residential
+      const isResidential = type === "Residential";
+      document.getElementById("strRow").classList.toggle("hidden", !isResidential);
+      if (!isResidential) document.getElementById("shortTermRental").checked = false;
+
+      setBuildingLife();
+
+      assetClass.innerHTML = type === ""
+        ? `<option value="">Select a property type first</option>`
+        : `<option value="">Select…</option>` + options.map(o => `<option>${o}</option>`).join("");
+    });
+
+    // Building life: Residential and Multifamily = 27.5, everything else = 39.
+    // A short-term rental is treated as nonresidential, so it gets 39.
+    function setBuildingLife() {
+      const type = propertyType.value;
+      const str = document.getElementById("shortTermRental").checked;
+      const life = type === "" ? "" : ((type === "Residential" || type === "Multifamily") && !str ? "27.5" : "39");
+      document.getElementById("buildingLife").value = life;
+    }
+    document.getElementById("shortTermRental").addEventListener("change", setBuildingLife);
+
+    show(tabs.findIndex(t => t[0] === "Overview"));
+  </script>
 </body>
 </html>
