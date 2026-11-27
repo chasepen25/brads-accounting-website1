@@ -387,6 +387,39 @@
     table.t select.mini { font-size: 12px; }
     .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 7px; vertical-align: 0; }
     @media (max-width: 980px) { .ex-wrap { grid-template-columns: 1fr; } .ex-panel { position: static; max-height: none; } }
+
+    /* Electrical */
+    .el-opts { display: flex; flex-wrap: wrap; gap: 5px; }
+    .el-opt {
+      font: inherit; font-size: 13px; font-weight: 600; border: 1.5px solid var(--line2); background: var(--paper); color: var(--ink2);
+      border-radius: 7px; padding: 6px 10px; cursor: pointer; min-width: 44px;
+    }
+    .el-opt.on { background: var(--solid); border-color: var(--solid); color: #fff; }
+    .el-opt.life { border-color: color-mix(in srgb, var(--c) 55%, var(--paper)); color: var(--c); }
+    .el-opt.life.on { background: var(--c); border-color: var(--c); color: #fff; }
+    .el-custom { display: flex; gap: 6px; margin-top: 6px; align-items: center; font-size: 12px; color: var(--muted); }
+    .el-custom input { width: 80px; font: inherit; font-size: 13px; color: var(--ink); background: var(--paper); border: 1px solid var(--line2); border-radius: 6px; padding: 5px 7px; }
+    .el-now { margin-top: 10px; font-size: 12px; color: var(--muted); }
+    .el-now b { color: var(--ink); }
+    .el-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .el-thumb { position: relative; border: 2px solid transparent; border-radius: 7px; overflow: hidden; cursor: pointer; aspect-ratio: 1; background: var(--tint); }
+    .el-thumb.on { border-color: var(--accent); }
+    .el-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .el-thumb .n { position: absolute; left: 4px; bottom: 4px; background: #000a; color: #fff; font-size: 10px; border-radius: 4px; padding: 1px 5px; }
+    .el-thumb .del { position: absolute; right: 3px; top: 3px; border: 0; background: #000a; color: #fff; border-radius: 4px; width: 20px; height: 20px; cursor: pointer; font-size: 13px; line-height: 1; }
+    .el-stage { position: relative; overflow: auto; max-height: calc(100vh - 150px); background: #111; text-align: center; }
+    .el-imgwrap { position: relative; display: inline-block; margin: 12px; }
+    .el-imgwrap img { display: block; user-select: none; -webkit-user-drag: none; }
+    .el-imgwrap svg { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
+    .el-bar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; margin: 6px 0 14px; background: var(--tint); }
+    .el-bar div { display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 700; min-width: 0; overflow: hidden; white-space: nowrap; transition: width .25s; }
+    .el-bar.big { height: 34px; font-size: 12px; margin-bottom: 8px; }
+    .el-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 12px; color: var(--ink2); margin-bottom: 4px; }
+    .el-legend.row { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 13px; margin-bottom: 14px; }
+    .el-legend span { display: flex; align-items: center; gap: 6px; }
+    .el-legend b { color: var(--ink); margin-left: auto; }
+    .el-legend.row b { margin-left: 4px; }
+    .el-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
     table.tree td { border-bottom: 1px solid var(--tint3); }
     table.tree tr.lvl-basis td { background: var(--solid); color: #fff; font-weight: 700; font-size: 14px; padding: 9px 10px; }
     table.tree tr.lvl-basis td .muted { color: #b9c7d8; font-weight: 400; font-size: 12px; }
@@ -584,6 +617,50 @@
     </div>
   </template>
 
+  <!-- ===================== ELECTRICAL ===================== -->
+  <template id="electrical-panel">
+    <label class="dropzone" id="elDrop">
+      <input type="file" id="elFile" accept="image/*" multiple hidden>
+      <b>Drag and drop photos of the electrical panels here</b> or click to browse
+      <small>JPG or PNG. Then drop a pin on each breaker or switch.</small>
+    </label>
+
+    <div class="ex-wrap hidden" id="elWrap">
+      <aside class="ex-panel">
+        <h4>Amps</h4>
+        <div class="el-opts" id="elAmps"></div>
+        <div class="el-custom">Custom <input id="elAmpCustom" class="money" inputmode="decimal" placeholder="amps"> A</div>
+
+        <h4>Life <span style="text-transform:none;letter-spacing:0">· keys 5, 7, 1 (15), B</span></h4>
+        <div class="el-opts" id="elLives"></div>
+
+        <div class="el-now" id="elNow"></div>
+
+        <h4>Split by life</h4>
+        <div id="elSplit"></div>
+
+        <h4>Photos</h4>
+        <div class="el-photos" id="elPhotos"></div>
+      </aside>
+
+      <div class="ex-viewer">
+        <div class="ex-bar">
+          <button class="small" id="elPrev">◀</button><span id="elPhotoLbl"></span><button class="small" id="elNext">▶</button>
+          <span class="sep"></span>
+          <button class="small" id="elZoomOut">−</button><span id="elZoomLbl">100%</span><button class="small" id="elZoomIn">＋</button><button class="small" id="elFit">Fit</button>
+          <span class="ex-hint">Click to drop a pin · right-click a pin to remove it</span>
+        </div>
+        <div class="el-stage" id="elStage"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Electrical split by life</h3>
+      <div id="elResult"></div>
+      <div class="note">Each life's share is its total amps divided by all the amps pinned. These percentages will be applied to the electrical cost later.</div>
+    </div>
+  </template>
+
   <!-- ===================== TAKEOFFS ===================== -->
   <template id="takeoffs-panel">
     <div class="section">
@@ -637,7 +714,7 @@
       ["Bases", "Each basis being studied: the purchase, improvements, and any others. Fills in from Workpapers."],
       ["Takeoffs", "Line items reclassified out of each basis, estimated from RS Means or from actual costs."],
       ["Exterior", "Measure site work on the plan: areas, lengths, counts, and walls. Results flow into Takeoffs as 15-year property."],
-      ["Electrical", "Electrical systems and dedicated circuits."],
+      ["Electrical", "Pin each breaker on the panel photos by amps and life to find the share of electrical that's 5, 7, 15-year, or building."],
       ["Depr Adj", "Depreciation adjustments and catch-up."],
       ["Unit Cost Detail", "Unit costs with location adjustments."],
       ["Indirect Costs", "Soft costs allocated across components."],
@@ -648,7 +725,7 @@
     // ---------- Tabs ----------
     const nav = document.getElementById("tabs");
     const main = document.getElementById("panels");
-    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form", "Bases": "bases-panel", "Takeoffs": "takeoffs-panel", "Exterior": "exterior-panel" };
+    const templates = { "Workpapers": "workpapers-panel", "Overview": "overview-form", "Bases": "bases-panel", "Takeoffs": "takeoffs-panel", "Exterior": "exterior-panel", "Electrical": "electrical-panel" };
 
     tabs.forEach(([name, desc], i) => {
       const btn = document.createElement("button");
@@ -1591,13 +1668,13 @@
         ${basisIds.map(id => `<tr class="group-row"><td colspan="8">${esc(basisName(id))}</td></tr>` + takeoffs.filter(t => t.basisId === id).map(t => `
           <tr data-id="${t.id}">
             <td>${esc(t.name)}${t.csi ? `<br><span class="csi">CSI ${t.csi}</span>` : ""}</td>
-            <td><span class="src-tag ${t.source === "actual" ? "actual" : ""}">${t.source === "actual" ? "Actual cost" : t.source === "exterior" ? "Exterior" : "RS Means"}</span></td>
+            <td><span class="src-tag ${t.source === "actual" ? "actual" : ""}">${t.source === "actual" ? "Actual cost" : t.source === "exterior" ? "Exterior" : t.source === "electrical" ? "Electrical" : "RS Means"}</span></td>
             <td>${esc(t.category)}</td>
-            <td><select data-life>${lives.map(l => `<option value="${l}" ${t.life === l ? "selected" : ""}>${l} yr</option>`).join("")}</select></td>
+            <td><select data-life ${t.source === "electrical" ? "disabled title='Set by the pins on the Electrical tab'" : ""}>${lives.map(l => `<option value="${l}" ${t.life === l ? "selected" : ""}>${l} yr</option>`).join("")}</select></td>
             <td class="n">${t.qty !== null ? `${(+t.qty.toFixed(2)).toLocaleString()} <span class="csi">${esc(unitLabel(t.unit))}</span>` : "—"}</td>
             <td class="n">${t.unitCost !== null ? money2(t.unitCost) : "—"}</td>
             <td class="n"><b>${money2(t.total)}</b></td>
-            <td>${t.source === "exterior" ? `<span class="csi" title="Edit on the Exterior tab">↗</span>` : `<button class="x" title="Remove">×</button>`}</td>
+            <td>${t.source === "exterior" || t.source === "electrical" ? `<span class="csi" title="Edit on the ${t.source === "exterior" ? "Exterior" : "Electrical"} tab">↗</span>` : `<button class="x" title="Remove">×</button>`}</td>
           </tr>`).join("")).join("")}
         </tbody></table>` : `<div style="color:#9ca3af;font-size:13px">Nothing added yet.</div>`;
 
@@ -2142,6 +2219,175 @@
     renderBases = function () { _renderBasesOrig(); if (typeof exItems !== "undefined") { syncExteriorTakeoffs(); renderExTally(); renderTakeoffs(); } };
     window.addEventListener("resize", () => { if (exDoc && document.querySelector(".panel.active #exWrap")) exRenderPage(); });
     renderExTally();
+
+
+    // ---------- Electrical: pin breakers on panel photos ----------
+    const EL_AMPS = [15, 20, 30, 40, 50, 100];
+    const EL_LIVES = [
+      { key: "5", label: "5 yr", color: "#3b82f6" },
+      { key: "7", label: "7 yr", color: "#a855f7" },
+      { key: "15", label: "15 yr", color: "#22c55e" },
+      { key: "B", label: "Building", color: "#94a3b8" }
+    ];
+    const lifeOf = k => EL_LIVES.find(l => l.key === k);
+    let elPhotos = [];      // { id, name, url, w, h }
+    let elPins = [];        // { id, photoId, x, y, amps, life }  (x, y in image pixels)
+    let elPhoto = null, elZoom = 1;
+    let elAmps = 20, elLife = "5";
+
+    // Amps and life pickers
+    $("elAmps").innerHTML = EL_AMPS.map(a => `<button class="el-opt" data-a="${a}">${a}</button>`).join("");
+    $("elLives").innerHTML = EL_LIVES.map(l => `<button class="el-opt life" data-l="${l.key}" style="--c:${l.color}">${l.label}</button>`).join("");
+    $("elAmps").querySelectorAll("button").forEach(b => b.onclick = () => { elAmps = +b.dataset.a; $("elAmpCustom").value = ""; elRenderPickers(); });
+    $("elLives").querySelectorAll("button").forEach(b => b.onclick = () => { elLife = b.dataset.l; elRenderPickers(); });
+    $("elAmpCustom").addEventListener("input", () => { const v = num($("elAmpCustom").value); if (v && v > 0) { elAmps = v; elRenderPickers(); } });
+    function elRenderPickers() {
+      $("elAmps").querySelectorAll("button").forEach(b => b.classList.toggle("on", +b.dataset.a === elAmps && !$("elAmpCustom").value));
+      $("elLives").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.l === elLife));
+      const L = lifeOf(elLife);
+      $("elNow").innerHTML = `Next pin: <b>${fmt(elAmps, 1)} A</b> · <b style="color:${L.color}">${L.label}</b>`;
+    }
+
+    // Upload photos
+    const elDrop = $("elDrop"), elFile = $("elFile");
+    elFile.addEventListener("change", () => { elAddFiles(elFile.files); elFile.value = ""; });
+    ["dragenter", "dragover"].forEach(ev => elDrop.addEventListener(ev, e => { e.preventDefault(); elDrop.classList.add("over"); }));
+    ["dragleave", "drop"].forEach(ev => elDrop.addEventListener(ev, e => { e.preventDefault(); elDrop.classList.remove("over"); }));
+    elDrop.addEventListener("drop", e => elAddFiles(e.dataTransfer.files));
+
+    function elAddFiles(list) {
+      const files = [...list];
+      const heic = files.filter(f => /\.(heic|heif)$/i.test(f.name) || /hei[cf]/i.test(f.type));
+      const imgs = files.filter(f => f.type.startsWith("image/") && !heic.includes(f));
+      if (heic.length) toast("HEIC photos can't be shown in the browser. On iPhone, share them as JPG (or set Camera > Formats > Most Compatible).");
+      if (!imgs.length) { if (!heic.length) toast("Only image files can be uploaded here."); return; }
+      let pending = imgs.length;
+      imgs.forEach(f => {
+        const url = URL.createObjectURL(f), img = new Image();
+        img.onload = () => {
+          const ph = { id: nextId++, name: f.name, url, w: img.naturalWidth, h: img.naturalHeight };
+          elPhotos.push(ph); elPhoto = ph;
+          if (--pending === 0) { elZoom = 1; elRenderPhotos(); elRenderPhoto(); }
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); toast(`Couldn't open ${f.name}.`); if (--pending === 0) { elRenderPhotos(); elRenderPhoto(); } };
+        img.src = url;
+      });
+    }
+
+    function elRenderPhotos() {
+      $("elWrap").classList.toggle("hidden", !elPhotos.length);
+      $("elPhotos").innerHTML = elPhotos.map((p, i) => {
+        const n = elPins.filter(x => x.photoId === p.id).length;
+        return `<div class="el-thumb ${p === elPhoto ? "on" : ""}" data-id="${p.id}" title="${esc(p.name)}">
+          <img src="${p.url}" alt=""><span class="n">${i + 1}${n ? ` · ${n} pins` : ""}</span><button class="del" title="Delete photo">×</button></div>`;
+      }).join("");
+      $("elPhotos").querySelectorAll(".el-thumb").forEach(t => {
+        const p = elPhotos.find(x => x.id === +t.dataset.id);
+        t.onclick = () => { elPhoto = p; elZoom = 1; elRenderPhotos(); elRenderPhoto(); };
+        t.querySelector(".del").onclick = e => {
+          e.stopPropagation();
+          const n = elPins.filter(x => x.photoId === p.id).length;
+          if (!confirm(n ? `Delete this photo and its ${n} pin${n > 1 ? "s" : ""}?` : "Delete this photo?")) return;
+          elPins = elPins.filter(x => x.photoId !== p.id);
+          elPhotos = elPhotos.filter(x => x !== p); URL.revokeObjectURL(p.url);
+          if (elPhoto === p) elPhoto = elPhotos[elPhotos.length - 1] || null;
+          elChanged(); elRenderPhoto();
+        };
+      });
+    }
+
+    let elView = null;
+    function elRenderPhoto() {
+      const stage = $("elStage");
+      if (!elPhoto) { stage.innerHTML = ""; elView = null; return; }
+      const i = elPhotos.indexOf(elPhoto);
+      $("elPhotoLbl").textContent = `Photo ${i + 1} of ${elPhotos.length}`;
+      $("elPrev").disabled = i <= 0; $("elNext").disabled = i >= elPhotos.length - 1;
+      const fit = Math.min((stage.clientWidth - 24) / elPhoto.w, (window.innerHeight - 190) / elPhoto.h, 1.5);
+      const scale = Math.max(0.05, fit) * elZoom;
+      $("elZoomLbl").textContent = Math.round(elZoom * 100) + "%";
+      stage.innerHTML = `<div class="el-imgwrap" style="width:${elPhoto.w * scale}px;height:${elPhoto.h * scale}px">
+        <img src="${elPhoto.url}" style="width:100%;height:100%" alt="">
+        <svg viewBox="0 0 ${elPhoto.w} ${elPhoto.h}"></svg></div>`;
+      const svg = stage.querySelector("svg");
+      elView = { svg, scale };
+      svg.addEventListener("click", e => {
+        const r = svg.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width * elPhoto.w, y = (e.clientY - r.top) / r.height * elPhoto.h;
+        elPins.push({ id: nextId++, photoId: elPhoto.id, x, y, amps: elAmps, life: elLife });
+        elChanged();
+      });
+      svg.addEventListener("contextmenu", e => {
+        const g = e.target.closest("[data-pin]"); if (!g) return;
+        e.preventDefault();
+        elPins = elPins.filter(p => p.id !== +g.dataset.pin); elChanged();
+      });
+      elDrawPins();
+    }
+    function elDrawPins() {
+      if (!elView || !elPhoto) return;
+      const k = 1 / elView.scale;   // image pixels per screen pixel
+      elView.svg.innerHTML = elPins.filter(p => p.photoId === elPhoto.id).map(p => {
+        const L = lifeOf(p.life), r = 11 * k;
+        return `<g data-pin="${p.id}" style="cursor:context-menu"><title>${fmt(p.amps, 1)} A · ${L.label} (right-click to remove)</title>
+          <circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${L.color}" stroke="#fff" stroke-width="${2 * k}"/>
+          <text x="${p.x}" y="${p.y + 3.6 * k}" font-size="${10 * k}" font-family="-apple-system,Segoe UI,Arial,sans-serif" font-weight="700" text-anchor="middle" fill="#fff" pointer-events="none">${fmt(p.amps, 1)}</text></g>`;
+      }).join("");
+    }
+    $("elPrev").onclick = () => { const i = elPhotos.indexOf(elPhoto); if (i > 0) { elPhoto = elPhotos[i - 1]; elZoom = 1; elRenderPhotos(); elRenderPhoto(); } };
+    $("elNext").onclick = () => { const i = elPhotos.indexOf(elPhoto); if (i < elPhotos.length - 1) { elPhoto = elPhotos[i + 1]; elZoom = 1; elRenderPhotos(); elRenderPhoto(); } };
+    const elSetZoom = z => { elZoom = Math.min(6, Math.max(0.25, z)); elRenderPhoto(); };
+    $("elZoomIn").onclick = () => elSetZoom(elZoom * 1.25);
+    $("elZoomOut").onclick = () => elSetZoom(elZoom / 1.25);
+    $("elFit").onclick = () => elSetZoom(1);
+
+    // Keys on the Electrical tab: 5 / 7 / 1 (15) / B pick the life
+    document.addEventListener("keydown", e => {
+      if (!document.querySelector(".panel.active #elWrap") || $("elWrap").classList.contains("hidden")) return;
+      if (e.target.closest("input, textarea, select") || e.metaKey || e.ctrlKey || e.altKey) return;
+      const k = e.key.toLowerCase();
+      const map = { "5": "5", "7": "7", "1": "15", "b": "B" };
+      if (map[k]) { elLife = map[k]; elRenderPickers(); }
+      else if (k === "+" || k === "=") elSetZoom(elZoom * 1.25);
+      else if (k === "-") elSetZoom(elZoom / 1.25);
+    });
+
+    // Shares by life, weighted by amps
+    function elShares() {
+      const totalAmps = elPins.reduce((s, p) => s + p.amps, 0);
+      return EL_LIVES.map(L => {
+        const pins = elPins.filter(p => p.life === L.key);
+        const amps = pins.reduce((s, p) => s + p.amps, 0);
+        const pct = totalAmps ? amps / totalAmps : 0;
+        return { ...L, count: pins.length, amps, pct };
+      });
+    }
+
+    // Bar of electrical split into % by life, with a legend
+    function elBar(sh, big) {
+      const bar = `<div class="el-bar ${big ? "big" : ""}">${sh.filter(x => x.pct > 0).map(x =>
+        `<div style="width:${x.pct * 100}%;background:${x.color}" title="${x.label} ${(x.pct * 100).toFixed(1)}%">${x.pct >= (big ? .08 : .14) ? `${(x.pct * 100).toFixed(big ? 1 : 0)}%` : ""}</div>`).join("")}</div>`;
+      const legend = `<div class="el-legend ${big ? "row" : ""}">${sh.map(x =>
+        `<span><i style="background:${x.color}"></i>${x.label}<b>${(x.pct * 100).toFixed(1)}%</b></span>`).join("")}</div>`;
+      return bar + legend;
+    }
+
+    function elRenderResult() {
+      const sh = elShares(), totalAmps = sh.reduce((s, x) => s + x.amps, 0);
+      $("elSplit").innerHTML = elPins.length ? elBar(sh, false) : `<div class="ex-empty">Drop pins to see the split.</div>`;
+      if (!elPins.length) { $("elResult").innerHTML = `<div style="color:var(--muted);font-size:13px">Drop pins on the panel photos to see the split.</div>`; return; }
+      $("elResult").innerHTML = `
+        ${elBar(sh, true)}
+        <table class="t"><thead><tr><th>Life</th><th class="n">Circuits</th><th class="n">Amps</th><th class="n">Share</th></tr></thead><tbody>
+          ${sh.map(x => `<tr><td><span class="dot" style="background:${x.color}"></span>${x.label}</td>
+            <td class="n">${x.count}</td><td class="n">${fmt(x.amps, 1)}</td><td class="n"><b>${(x.pct * 100).toFixed(1)}%</b></td></tr>`).join("")}
+          <tr class="total"><td>Total</td><td class="n">${elPins.length}</td><td class="n">${fmt(totalAmps, 1)}</td><td class="n">100%</td></tr>
+        </tbody></table>`;
+    }
+
+    function elChanged() { elRenderPhotos(); elDrawPins(); elRenderResult(); }
+    window.addEventListener("resize", () => { if (elPhoto && document.querySelector(".panel.active #elWrap")) elRenderPhoto(); });
+    elRenderPickers(); elRenderResult();
 
     // ---------- Study summary bar and step checkmarks ----------
     function basisDepreciable(b) { return b.kind === KINDS[0] ? depreciable(b) : num(b.amount); }
