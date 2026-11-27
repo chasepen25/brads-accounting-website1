@@ -2186,6 +2186,7 @@
       fetch("/api/me", { credentials: "same-origin" }).then(async r => {
         if (r.status === 401) { location.href = "/login"; return; }
         const { user } = await r.json();
+        if (!user) return;            // sign-in is turned off
         $("userName").textContent = user.name || user.email;
         $("userName").title = user.email;
         $("userName").classList.remove("hidden");

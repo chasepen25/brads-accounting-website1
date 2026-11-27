@@ -1,11 +1,15 @@
 "use strict";
-// Serves the app to signed-in users, and the sign-in / create-account page to everyone else.
+// Serves the app. Sign-in is off unless REQUIRE_LOGIN=1 is set; then only signed-in users
+// get the app and everyone else gets the sign-in / create-account page.
 
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
-const auth = require("./auth");
-const { Users, Sessions, DATA_DIR } = require("./db");
+
+const REQUIRE_LOGIN = /^(1|true|yes)$/i.test(process.env.REQUIRE_LOGIN || "");
+// Account code (and its database) only loads when sign-in is turned on
+const auth = REQUIRE_LOGIN ? require("./auth") : null;
+const { Users, Sessions, DATA_DIR } = REQUIRE_LOGIN ? require("./db") : {};
 
 const ROOT = __dirname;
 const PORT = +process.env.PORT || 8080;
@@ -79,13 +83,16 @@ const clientIp = req => String(req.headers["x-forwarded-for"] || req.socket.remo
 setInterval(() => {
   const cutoff = Date.now() - WINDOW;
   for (const [k, r] of attempts) if (r.at < cutoff) attempts.delete(k);
-  Sessions.sweep();
+  if (Sessions) Sessions.sweep();
 }, 10 * 60 * 1000).unref();
 
 const publicUser = u => ({ name: u.name, email: u.email });
 
 /* ---------- routes ---------- */
 async function api(req, res, route) {
+  // With sign-in off, the app runs without an account
+  if (!REQUIRE_LOGIN) return route === "/api/me" ? json(res, 200, { user: null, loginRequired: false }) : json(res, 404, { error: "Sign-in is turned off." });
+
   if (req.method !== "POST" && route !== "/api/me") return json(res, 405, { error: "Method not allowed." });
   if (req.method === "POST" && (!sameOrigin(req) || !String(req.headers["content-type"] || "").includes("application/json")))
     return json(res, 403, { error: "Not allowed." });
@@ -142,6 +149,13 @@ const server = http.createServer(async (req, res) => {
 
   if (route.startsWith("/api/")) return api(req, res, route).catch(e => { console.error(e); json(res, 500, { error: "Something went wrong." }); });
 
+  if (!REQUIRE_LOGIN) {
+    if (route === "/login") return send(res, 302, "", undefined, { Location: "/" });
+    if (route === "/") route = "/index.html";
+    if (!APP_FILES.has(route)) return send(res, 404, "Not found");
+    return serveFile(res, route.slice(1));
+  }
+
   const user = Sessions.user(parseCookies(req.headers.cookie).sid);
 
   if (route === "/login") {
@@ -161,5 +175,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Cost Seg Professional on http://localhost:${PORT}`);
-  console.log(`  data: ${DATA_DIR}  ·  accounts: ${Users.count()}`);
+  console.log(REQUIRE_LOGIN ? `  sign-in on · data: ${DATA_DIR} · accounts: ${Users.count()}` : "  sign-in off (set REQUIRE_LOGIN=1 to turn it on)");
 });
